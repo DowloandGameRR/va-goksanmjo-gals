@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <style>
+        /* ===== RESET & BASE ===== */
         *,
         *::before,
         *::after {
@@ -58,7 +59,7 @@
         /* ---- Container ---- */
         .container {
             width: 100%;
-            max-width: 560px;
+            max-width: 600px;
             background: var(--valorant-card);
             border-radius: var(--radius-xl);
             padding: 36px 32px;
@@ -67,6 +68,17 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(4px);
+            animation: containerPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes containerPulse {
+            0%,
+            100% {
+                border-color: rgba(255, 70, 85, 0.10);
+            }
+            50% {
+                border-color: rgba(255, 70, 85, 0.25);
+            }
         }
 
         .container::before {
@@ -78,6 +90,19 @@
             height: 180%;
             background: radial-gradient(circle at 30% 20%, rgba(255, 70, 85, 0.04) 0%, transparent 65%);
             pointer-events: none;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
         }
 
         .container::after {
@@ -88,7 +113,18 @@
             right: 0;
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--valorant-red), var(--valorant-red), transparent);
-            opacity: 0.3;
+            opacity: 0.4;
+            animation: lineGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes lineGlow {
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 0.8;
+            }
         }
 
         /* ---- Login Box ---- */
@@ -102,6 +138,17 @@
             z-index: 1;
             border: 1px solid rgba(255, 255, 255, 0.4);
             transition: var(--transition);
+            animation: loginFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes loginFloat {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
         }
 
         .login-box:hover {
@@ -115,6 +162,17 @@
             margin-bottom: 6px;
             display: block;
             filter: drop-shadow(0 4px 16px rgba(255, 70, 85, 0.3));
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .login-box h1 {
@@ -211,11 +269,11 @@
         @keyframes fadeSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(16px);
+                transform: translateY(20px) scale(0.98);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
@@ -230,6 +288,17 @@
             margin-bottom: 28px;
             border: 1px solid var(--valorant-border);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%,
+            100% {
+                border-color: var(--valorant-border);
+            }
+            50% {
+                border-color: var(--valorant-border-light);
+            }
         }
 
         .user-bar img {
@@ -240,6 +309,12 @@
             object-fit: cover;
             flex-shrink: 0;
             box-shadow: 0 0 20px rgba(255, 70, 85, 0.15);
+            transition: var(--transition);
+        }
+
+        .user-bar img:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(255, 70, 85, 0.3);
         }
 
         .user-bar .user-details {
@@ -283,73 +358,162 @@
             background: var(--valorant-red);
             color: #fff;
             box-shadow: 0 0 24px rgba(255, 70, 85, 0.3);
+            transform: scale(1.04);
         }
 
-        /* ---- Action Grid ---- */
-        .action-grid {
+        /* ---- Tabs ---- */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--valorant-dark);
+            padding: 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--valorant-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            color: var(--valorant-muted);
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: var(--valorant-red);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #fff;
+            background: var(--valorant-card-light);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeSlideIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ---- Trade List ---- */
+        .trade-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 24px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
-            border: none;
-            color: #fff;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 17px 0;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
+        .trade-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .trade-list::-webkit-scrollbar-track {
+            background: var(--valorant-dark);
+            border-radius: 4px;
+        }
+        .trade-list::-webkit-scrollbar-thumb {
+            background: var(--valorant-red);
+            border-radius: 4px;
+        }
+
+        .trade-item {
+            background: var(--valorant-dark);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--valorant-border);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition);
+            animation: slideItem 0.3s ease;
         }
 
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.06) 100%);
-            pointer-events: none;
+        @keyframes slideItem {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(255, 70, 85, 0.5);
+        .trade-item:hover {
+            border-color: var(--valorant-border-light);
+            transform: translateX(4px);
         }
 
-        .btn-primary:active {
-            transform: scale(0.97);
+        .trade-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 1.5px solid var(--valorant-border);
-            color: #c0d0e0;
+        .trade-item .info .title {
             font-weight: 600;
             font-size: 14px;
-            padding: 14px 0;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            color: #fff;
         }
 
-        .btn-secondary:hover {
-            background: var(--valorant-border);
-            color: #fff;
-            border-color: var(--valorant-border-light);
+        .trade-item .info .sub {
+            font-size: 12px;
+            color: var(--valorant-muted);
+        }
+
+        .trade-item .status-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .trade-item .status-badge.waiting {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--valorant-warning);
+        }
+
+        .trade-item .status-badge.active {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--valorant-success);
+        }
+
+        .trade-item .status-badge.completed {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--valorant-success);
+        }
+
+        .trade-item .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--valorant-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+        }
+
+        .trade-item .delete-btn:hover {
+            color: var(--valorant-red);
+            background: rgba(255, 70, 85, 0.1);
+            transform: scale(1.1);
         }
 
         /* ---- Trade Form ---- */
@@ -517,6 +681,154 @@
             box-shadow: 0 4px 20px rgba(0, 212, 170, 0.35);
         }
 
+        /* ---- Trade Screen (Partner Join) ---- */
+        .trade-screen {
+            display: none;
+            animation: fadeSlideIn 0.5s ease;
+        }
+
+        .trade-screen.visible {
+            display: block;
+        }
+
+        .trade-screen .screen-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--valorant-border);
+        }
+
+        .trade-screen .screen-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .trade-screen .screen-header p {
+            color: var(--valorant-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .trade-screen .profiles {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--valorant-dark);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--valorant-border);
+        }
+
+        .trade-screen .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .trade-screen .profile .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--valorant-border);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .trade-screen .profile .avatar.ready {
+            border-color: var(--valorant-success);
+            box-shadow: 0 0 24px rgba(0, 212, 170, 0.3);
+        }
+
+        .trade-screen .profile .avatar.waiting {
+            border-color: var(--valorant-warning);
+            box-shadow: 0 0 24px rgba(255, 170, 0, 0.2);
+        }
+
+        .trade-screen .profile .name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .trade-screen .profile .status-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--valorant-muted);
+        }
+
+        .trade-screen .profile .status-text.ready {
+            color: var(--valorant-success);
+        }
+
+        .trade-screen .profile .status-text.waiting {
+            color: var(--valorant-warning);
+        }
+
+        .trade-screen .vs-icon {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--valorant-red);
+            text-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+            animation: vsPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes vsPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .trade-screen .partner-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .trade-screen .partner-form input {
+            background: var(--valorant-card);
+            border: 1px solid var(--valorant-border);
+            border-radius: var(--radius-full);
+            padding: 13px 20px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .trade-screen .partner-form input:focus {
+            border-color: var(--valorant-red);
+            box-shadow: 0 0 0 4px rgba(255, 70, 85, 0.12);
+        }
+
+        .trade-screen .partner-form .btn-join {
+            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            padding: 15px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.25);
+        }
+
+        .trade-screen .partner-form .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(255, 70, 85, 0.4);
+        }
+
         /* ---- Status Box ---- */
         .status-box {
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
@@ -622,6 +934,19 @@
             font-weight: 800;
             font-variant-numeric: tabular-nums;
             box-shadow: inset 0 0 40px rgba(255, 70, 85, 0.04);
+            animation: codeGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes codeGlow {
+            0%,
+            100% {
+                border-color: var(--valorant-red);
+                box-shadow: inset 0 0 40px rgba(255, 70, 85, 0.04);
+            }
+            50% {
+                border-color: #ff6a78;
+                box-shadow: inset 0 0 60px rgba(255, 70, 85, 0.08);
+            }
         }
 
         .code-input-group {
@@ -816,6 +1141,20 @@
                 width: 100%;
                 justify-content: center;
             }
+            .trade-screen .profiles {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .trade-screen .vs-icon {
+                transform: rotate(90deg);
+            }
+            .tabs {
+                flex-direction: column;
+                border-radius: var(--radius-md);
+            }
+            .tab-btn {
+                padding: 12px 0;
+            }
         }
 
         @media (max-width: 400px) {
@@ -873,6 +1212,7 @@
         <!-- ===== APP ===== -->
         <div id="appSection" class="app-section">
 
+            <!-- User Bar -->
             <div class="user-bar">
                 <img id="userPhoto" src="https://via.placeholder.com/44" alt="profil" />
                 <div class="user-details">
@@ -882,59 +1222,132 @@
                 <button id="logoutBtn" class="logout-btn">Çıkış</button>
             </div>
 
-            <div class="action-grid">
-                <button id="openTradeBtn" class="btn-primary">
-                    <i class="fas fa-plus-circle"></i> Takas Aç
-                </button>
-                <button id="refreshTradeBtn" class="btn-secondary">
-                    <i class="fas fa-sync-alt"></i> Durumu Kontrol Et
-                </button>
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab-trade"><i class="fas fa-plus-circle"></i> Takas</button>
+                <button class="tab-btn" data-tab="tab-list"><i class="fas fa-list"></i> Listem</button>
             </div>
 
-            <!-- Trade Form -->
-            <div id="tradeForm" class="trade-form">
-                <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
-                <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" autocomplete="off" />
-                <label><i class="fas fa-lock"></i> Valorant Şifre</label>
-                <input type="password" id="tradePassword" placeholder="Şifreniz" autocomplete="off" />
-                <button id="confirmTradeBtn" class="btn-confirm">
-                    <i class="fas fa-check-circle"></i> Takas Oluştur
+            <!-- Tab: Takas -->
+            <div id="tab-trade" class="tab-content active">
+
+                <button id="openTradeBtn" class="btn-primary" style="width:100%; margin-bottom:12px;">
+                    <i class="fas fa-plus-circle"></i> Yeni Takas Aç
                 </button>
-                <button id="cancelTradeBtn" class="btn-cancel">İptal</button>
-            </div>
 
-            <!-- Link Box -->
-            <div id="linkBox" class="link-box">
-                <span class="link-label"><i class="fas fa-link"></i> Takas Linki</span>
-                <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
-                <button id="copyLinkBtn" class="copy-btn">
-                    <i class="fas fa-copy"></i> Kopyala
-                </button>
-            </div>
+                <!-- Trade Form -->
+                <div id="tradeForm" class="trade-form">
+                    <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
+                    <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" autocomplete="off" />
+                    <label><i class="fas fa-lock"></i> Valorant Şifre</label>
+                    <input type="password" id="tradePassword" placeholder="Şifreniz" autocomplete="off" />
+                    <button id="confirmTradeBtn" class="btn-confirm">
+                        <i class="fas fa-check-circle"></i> Takas Oluştur
+                    </button>
+                    <button id="cancelTradeBtn" class="btn-cancel">İptal</button>
+                </div>
 
-            <!-- Status Box -->
-            <div id="statusBox" class="status-box">
-                <div class="title"><i class="fas fa-exchange-alt"></i> Aktif Takas</div>
-                <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
-            </div>
+                <!-- Link Box -->
+                <div id="linkBox" class="link-box">
+                    <span class="link-label"><i class="fas fa-link"></i> Takas Linki</span>
+                    <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
+                    <button id="copyLinkBtn" class="copy-btn">
+                        <i class="fas fa-copy"></i> Kopyala
+                    </button>
+                </div>
 
-            <!-- Code Section -->
-            <div id="codeSection" class="code-section">
-                <div class="code-wrapper">
-                    <div class="code-header">
-                        <span class="label"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
-                        <span id="codeStatus" class="status-badge waiting">BEKLİYOR</span>
+                <!-- Status Box -->
+                <div id="statusBox" class="status-box">
+                    <div class="title"><i class="fas fa-exchange-alt"></i> Aktif Takas</div>
+                    <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
+                </div>
+
+                <!-- Code Section -->
+                <div id="codeSection" class="code-section">
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="label"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
+                            <span id="codeStatus" class="status-badge waiting">BEKLİYOR</span>
+                        </div>
+                        <div class="code-display" id="myCodeDisplay">------</div>
+                        <div class="code-input-group">
+                            <input type="text" id="codeInput" placeholder="6 haneli kod" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+                            <button id="confirmCodeBtn" class="btn-verify">
+                                <i class="fas fa-check"></i> Doğrula
+                            </button>
+                        </div>
+                        <div id="partnerCodeBox" class="partner-code-box">
+                            <div class="label">Partner Kodu</div>
+                            <div class="code" id="partnerCodeDisplay">------</div>
+                        </div>
                     </div>
-                    <div class="code-display" id="myCodeDisplay">------</div>
-                    <div class="code-input-group">
-                        <input type="text" id="codeInput" placeholder="6 haneli kod" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
-                        <button id="confirmCodeBtn" class="btn-verify">
-                            <i class="fas fa-check"></i> Doğrula
-                        </button>
+                </div>
+            </div>
+
+            <!-- Tab: Listem -->
+            <div id="tab-list" class="tab-content">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span style="font-weight:600; color:var(--valorant-muted); font-size:13px;">Aktif Takasların</span>
+                    <button id="refreshListBtn" class="btn-secondary" style="padding:6px 16px; font-size:12px;">
+                        <i class="fas fa-sync-alt"></i> Yenile
+                    </button>
+                </div>
+                <div id="tradeListContainer" class="trade-list">
+                    <div style="text-align:center; color:var(--valorant-muted-dark); padding:30px 0; font-size:14px;">
+                        <i class="fas fa-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>
+                        Henüz takasın yok.
                     </div>
-                    <div id="partnerCodeBox" class="partner-code-box">
-                        <div class="label">Partner Kodu</div>
-                        <div class="code" id="partnerCodeDisplay">------</div>
+                </div>
+            </div>
+
+            <!-- Trade Screen (Partner Join) -->
+            <div id="tradeScreen" class="trade-screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-handshake" style="color:var(--valorant-red);"></i> Takas Ekranı</h2>
+                    <p>Karşılıklı onay bekleniyor</p>
+                </div>
+
+                <div class="profiles">
+                    <div class="profile" id="profile-me">
+                        <img id="screenMyPhoto" class="avatar waiting" src="https://via.placeholder.com/64" alt="Ben" />
+                        <div class="name" id="screenMyName">Ben</div>
+                        <div class="status-text waiting" id="screenMyStatus">Hazır değil</div>
+                    </div>
+                    <div class="vs-icon">⚔️</div>
+                    <div class="profile" id="profile-partner">
+                        <img id="screenPartnerPhoto" class="avatar waiting" src="https://via.placeholder.com/64" alt="Partner" />
+                        <div class="name" id="screenPartnerName">Partner</div>
+                        <div class="status-text waiting" id="screenPartnerStatus">Bekleniyor</div>
+                    </div>
+                </div>
+
+                <!-- Partner Form (giriş yapmamışsa) -->
+                <div id="partnerFormContainer" class="partner-form">
+                    <input type="text" id="partnerUsername" placeholder="Valorant Kullanıcı Adın" />
+                    <input type="password" id="partnerPassword" placeholder="Valorant Şifren" />
+                    <button id="joinTradeBtn" class="btn-join">
+                        <i class="fas fa-check-circle"></i> Takasa Katıl
+                    </button>
+                </div>
+
+                <!-- Kod doğrulama (zaten partner ise) -->
+                <div id="partnerCodeSection" style="display:none; margin-top:16px;">
+                    <div style="background:var(--valorant-dark); padding:16px; border-radius:var(--radius-md); border:1px solid var(--valorant-border);">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; color:#b0c0d0;"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
+                            <span id="partnerCodeStatus" class="status-badge waiting">BEKLİYOR</span>
+                        </div>
+                        <div class="code-display" id="partnerMyCode">------</div>
+                        <div class="code-input-group">
+                            <input type="text" id="partnerCodeInput" placeholder="6 haneli kod" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+                            <button id="partnerConfirmCodeBtn" class="btn-verify">
+                                <i class="fas fa-check"></i> Doğrula
+                            </button>
+                        </div>
+                        <div id="partnerPartnerCodeBox" class="partner-code-box" style="display:none;">
+                            <div class="label">Karşı Taraf Kodu</div>
+                            <div class="code" id="partnerPartnerCode">------</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -951,7 +1364,7 @@
     <div id="toast" class="toast"></div>
 
     <!-- ============================================================ -->
-    <!-- FIREBASE MODULE (ES Module)                                    -->
+    <!-- FIREBASE MODULE                                                -->
     <!-- ============================================================ -->
     <script type="module">
         // ---- Firebase Imports ----
@@ -978,7 +1391,7 @@
             deleteDoc
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-        // ---- Firebase Config ----
+        // ---- Config ----
         const firebaseConfig = {
             apiKey: "AIzaSyCRIlZJQkQhAx87I9W4EdGrSsWPNYZF5zU",
             authDomain: "valotakasofficial.firebaseapp.com",
@@ -989,7 +1402,6 @@
             measurementId: "G-N09VJ4TZNE"
         };
 
-        // ---- Init ----
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
@@ -1007,6 +1419,12 @@
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
 
+        const tabs = document.querySelectorAll('.tab-btn');
+        const tabContents = {
+            trade: document.getElementById('tab-trade'),
+            list: document.getElementById('tab-list')
+        };
+
         const openTradeBtn = document.getElementById('openTradeBtn');
         const tradeForm = document.getElementById('tradeForm');
         const tradeUsername = document.getElementById('tradeUsername');
@@ -1020,7 +1438,8 @@
 
         const statusBox = document.getElementById('statusBox');
         const statusDesc = document.getElementById('statusDesc');
-        const refreshTradeBtn = document.getElementById('refreshTradeBtn');
+        const refreshListBtn = document.getElementById('refreshListBtn');
+        const tradeListContainer = document.getElementById('tradeListContainer');
 
         const codeSection = document.getElementById('codeSection');
         const myCodeDisplay = document.getElementById('myCodeDisplay');
@@ -1030,18 +1449,40 @@
         const partnerCodeDisplay = document.getElementById('partnerCodeDisplay');
         const codeStatus = document.getElementById('codeStatus');
 
+        // Trade Screen
+        const tradeScreen = document.getElementById('tradeScreen');
+        const screenMyPhoto = document.getElementById('screenMyPhoto');
+        const screenMyName = document.getElementById('screenMyName');
+        const screenMyStatus = document.getElementById('screenMyStatus');
+        const screenPartnerPhoto = document.getElementById('screenPartnerPhoto');
+        const screenPartnerName = document.getElementById('screenPartnerName');
+        const screenPartnerStatus = document.getElementById('screenPartnerStatus');
+        const partnerFormContainer = document.getElementById('partnerFormContainer');
+        const partnerUsername = document.getElementById('partnerUsername');
+        const partnerPassword = document.getElementById('partnerPassword');
+        const joinTradeBtn = document.getElementById('joinTradeBtn');
+        const partnerCodeSection = document.getElementById('partnerCodeSection');
+        const partnerMyCode = document.getElementById('partnerMyCode');
+        const partnerCodeInput = document.getElementById('partnerCodeInput');
+        const partnerConfirmCodeBtn = document.getElementById('partnerConfirmCodeBtn');
+        const partnerPartnerCodeBox = document.getElementById('partnerPartnerCodeBox');
+        const partnerPartnerCode = document.getElementById('partnerPartnerCode');
+        const partnerCodeStatus = document.getElementById('partnerCodeStatus');
+
         const toast = document.getElementById('toast');
 
         // ---- State ----
         let currentUser = null;
         let currentTradeId = null;
         let unsubscribeTrade = null;
+        let currentTradeData = null;
         let toastTimeout = null;
 
         // ---- Helpers ----
         function showLogin() {
             loginSection.style.display = 'block';
             appSection.classList.remove('active');
+            tradeScreen.classList.remove('visible');
             resetUI();
         }
 
@@ -1056,11 +1497,15 @@
             statusBox.classList.remove('active');
             codeSection.classList.remove('visible');
             partnerCodeBox.classList.remove('visible');
-            currentTradeId = null;
+            partnerCodeSection.style.display = 'none';
+            partnerPartnerCodeBox.style.display = 'none';
+            tradeScreen.classList.remove('visible');
             if (unsubscribeTrade) {
                 unsubscribeTrade();
                 unsubscribeTrade = null;
             }
+            currentTradeId = null;
+            currentTradeData = null;
         }
 
         function setUser(user) {
@@ -1069,6 +1514,8 @@
                 userEmail.textContent = user.email;
                 userPhoto.src = user.photoURL ||
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=ff4655&color=fff&size=44`;
+                screenMyPhoto.src = userPhoto.src;
+                screenMyName.textContent = user.displayName || 'Ben';
             }
         }
 
@@ -1093,6 +1540,84 @@
                 toastTimeout = null; }, 4500);
         }
 
+        // ---- Tabs ----
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                Object.keys(tabContents).forEach(key => {
+                    tabContents[key].classList.toggle('active', key === tabId);
+                });
+            });
+        });
+
+        // ---- Trade List ----
+        async function loadTradeList(userId) {
+            try {
+                const q = query(collection(db, "trades"),
+                    where("creatorId", "==", userId),
+                    where("status", "in", ["waiting_partner", "waiting_codes", "completed"])
+                );
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    tradeListContainer.innerHTML = `
+                        <div style="text-align:center; color:var(--valorant-muted-dark); padding:30px 0; font-size:14px;">
+                            <i class="fas fa-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>
+                            Henüz takasın yok.
+                        </div>
+                    `;
+                    return;
+                }
+                let html = '';
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    const statusMap = {
+                        'waiting_partner': { label: 'Bekliyor', cls: 'waiting' },
+                        'waiting_codes': { label: 'Aktif', cls: 'active' },
+                        'completed': { label: 'Tamamlandı', cls: 'completed' }
+                    };
+                    const st = statusMap[data.status] || { label: data.status, cls: 'waiting' };
+                    html += `
+                        <div class="trade-item">
+                            <div class="info">
+                                <div class="title">${data.creatorUsername || 'İsimsiz'}</div>
+                                <div class="sub">${data.partnerUsername ? 'Partner: ' + data.partnerUsername : 'Partner bekleniyor'}</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span class="status-badge ${st.cls}">${st.label}</span>
+                                <button class="delete-btn" data-trade-id="${doc.id}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                tradeListContainer.innerHTML = html;
+
+                // Silme işlemleri
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const tradeId = btn.dataset.tradeId;
+                        if (confirm('Bu takası silmek istediğinize emin misiniz?')) {
+                            try {
+                                await deleteDoc(doc(db, "trades", tradeId));
+                                showToast('Takas silindi.', 'success');
+                                loadTradeList(userId);
+                            } catch (e) {
+                                showToast('Silme hatası: ' + e.message, 'error');
+                            }
+                        }
+                    });
+                });
+            } catch (e) {
+                console.error('Load trade list error:', e);
+                showToast('Takas listesi yüklenemedi: ' + e.message, 'error');
+            }
+        }
+
+        refreshListBtn.addEventListener('click', () => {
+            if (currentUser) loadTradeList(currentUser.uid);
+        });
+
         // ---- Firestore: Takas Dinle ----
         async function listenForTrade(userId) {
             if (unsubscribeTrade) { unsubscribeTrade();
@@ -1106,11 +1631,16 @@
                 if (!snapCreator.empty) {
                     const docSnap = snapCreator.docs[0];
                     currentTradeId = docSnap.id;
+                    currentTradeData = docSnap.data();
                     setupTradeUI(docSnap.id, docSnap.data(), userId);
                     unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
-                        if (doc.exists()) setupTradeUI(doc.id, doc.data(), userId);
-                        else { resetUI();
-                            showToast('Takas sonlandırıldı.', 'warning'); }
+                        if (doc.exists()) {
+                            currentTradeData = doc.data();
+                            setupTradeUI(doc.id, doc.data(), userId);
+                        } else {
+                            resetUI();
+                            showToast('Takas sonlandırıldı.', 'warning');
+                        }
                     });
                     return;
                 }
@@ -1122,11 +1652,16 @@
                 if (!snapPartner.empty) {
                     const docSnap = snapPartner.docs[0];
                     currentTradeId = docSnap.id;
+                    currentTradeData = docSnap.data();
                     setupTradeUI(docSnap.id, docSnap.data(), userId);
                     unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
-                        if (doc.exists()) setupTradeUI(doc.id, doc.data(), userId);
-                        else { resetUI();
-                            showToast('Takas sonlandırıldı.', 'warning'); }
+                        if (doc.exists()) {
+                            currentTradeData = doc.data();
+                            setupTradeUI(doc.id, doc.data(), userId);
+                        } else {
+                            resetUI();
+                            showToast('Takas sonlandırıldı.', 'warning');
+                        }
                     });
                     return;
                 }
@@ -1134,6 +1669,7 @@
                 statusBox.classList.remove('active');
                 linkBox.classList.remove('active');
                 tradeForm.classList.remove('active');
+                tradeScreen.classList.remove('visible');
             } catch (error) {
                 console.error('ListenForTrade error:', error);
                 showToast('Takas durumu alınamadı: ' + error.message, 'error');
@@ -1143,12 +1679,17 @@
         // ---- Takas UI Güncelle ----
         function setupTradeUI(tradeId, data, userId) {
             currentTradeId = tradeId;
+            currentTradeData = data;
             tradeForm.classList.remove('active');
             linkBox.classList.remove('active');
             statusBox.classList.remove('active');
             codeSection.classList.remove('visible');
             partnerCodeBox.classList.remove('visible');
+            tradeScreen.classList.remove('visible');
+            partnerCodeSection.style.display = 'none';
+            partnerPartnerCodeBox.style.display = 'none';
 
+            // ---- WAITING PARTNER (Creator) ----
             if (data.status === 'waiting_partner' && data.creatorId === userId) {
                 const link = getTradeLink(tradeId);
                 tradeLinkInput.value = link;
@@ -1159,10 +1700,13 @@
                 return;
             }
 
+            // ---- WAITING CODES ----
             if (data.status === 'waiting_codes') {
+                // Ana kod bölümünü göster
                 codeSection.classList.add('visible');
                 statusBox.classList.add('active');
                 statusDesc.textContent = 'Kod doğrulama aşaması. Karşılıklı kodları girin.';
+
                 if (data.creatorId === userId) {
                     myCodeDisplay.textContent = data.creatorCode || '------';
                     if (data.partnerCode) {
@@ -1188,9 +1732,13 @@
                         codeStatus.className = 'status-badge waiting';
                     }
                 }
+
+                // Takas ekranını da göster (partner için)
+                showTradeScreen(data, userId);
                 return;
             }
 
+            // ---- COMPLETED ----
             if (data.status === 'completed') {
                 showToast('🎉 Takas başarıyla tamamlandı!', 'success');
                 resetUI();
@@ -1202,6 +1750,80 @@
                 return;
             }
             resetUI();
+        }
+
+        // ---- Takas Ekranı (Partner Join) ----
+        function showTradeScreen(data, userId) {
+            tradeScreen.classList.add('visible');
+
+            // Benim profilim
+            screenMyPhoto.src = currentUser?.photoURL || 'https://via.placeholder.com/64';
+            screenMyName.textContent = currentUser?.displayName || 'Ben';
+
+            // Partner profili
+            const partnerId = data.creatorId === userId ? data.partnerId : data.creatorId;
+            const partnerName = data.creatorId === userId ? data.partnerUsername : data.creatorUsername;
+
+            if (partnerId) {
+                screenPartnerPhoto.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(partnerName || 'Partner') +
+                    '&background=ff4655&color=fff&size=64';
+                screenPartnerName.textContent = partnerName || 'Partner';
+                screenPartnerStatus.textContent = 'Hazır';
+                screenPartnerStatus.className = 'status-text ready';
+                screenPartnerPhoto.className = 'avatar ready';
+                screenMyStatus.textContent = 'Hazır';
+                screenMyStatus.className = 'status-text ready';
+                screenMyPhoto.className = 'avatar ready';
+                partnerFormContainer.style.display = 'none';
+                partnerCodeSection.style.display = 'block';
+                partnerMyCode.textContent = data.creatorId === userId ? data.creatorCode : data.partnerCode;
+
+                if (data.creatorId === userId) {
+                    if (data.partnerCode) {
+                        partnerPartnerCode.textContent = data.partnerCode;
+                        partnerPartnerCodeBox.style.display = 'block';
+                        partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
+                        partnerCodeStatus.className = 'status-badge ready';
+                    } else {
+                        partnerPartnerCodeBox.style.display = 'none';
+                        partnerCodeStatus.textContent = 'PARTNER BEKLENİYOR';
+                        partnerCodeStatus.className = 'status-badge waiting';
+                    }
+                } else {
+                    if (data.creatorCode) {
+                        partnerPartnerCode.textContent = data.creatorCode;
+                        partnerPartnerCodeBox.style.display = 'block';
+                        partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                        partnerCodeStatus.className = 'status-badge ready';
+                    } else {
+                        partnerPartnerCodeBox.style.display = 'none';
+                        partnerCodeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
+                        partnerCodeStatus.className = 'status-badge waiting';
+                    }
+                }
+            } else {
+                // Partner henüz katılmadı
+                screenPartnerPhoto.className = 'avatar waiting';
+                screenPartnerName.textContent = '???';
+                screenPartnerStatus.textContent = 'Bekleniyor';
+                screenPartnerStatus.className = 'status-text waiting';
+                screenMyStatus.textContent = 'Hazır';
+                screenMyStatus.className = 'status-text ready';
+                screenMyPhoto.className = 'avatar ready';
+                partnerFormContainer.style.display = 'block';
+                partnerCodeSection.style.display = 'none';
+            }
+
+            // Partner form butonu
+            joinTradeBtn.onclick = async () => {
+                const pUsername = partnerUsername.value.trim();
+                const pPassword = partnerPassword.value.trim();
+                if (!pUsername || !pPassword) {
+                    showToast('Lütfen tüm alanları doldurun.', 'error');
+                    return;
+                }
+                await joinTradeAsPartner(currentTradeId, pUsername, pPassword);
+            };
         }
 
         // ---- Takas Oluştur ----
@@ -1226,8 +1848,10 @@
                 const docRef = doc(collection(db, "trades"));
                 await setDoc(docRef, tradeData);
                 currentTradeId = docRef.id;
+                currentTradeData = tradeData;
                 showToast('✅ Takas oluşturuldu! Linki kopyalayın.', 'success');
                 await listenForTrade(currentUser.uid);
+                loadTradeList(currentUser.uid);
                 return true;
             } catch (error) {
                 console.error('Create trade error:', error);
@@ -1258,6 +1882,7 @@
                 });
                 showToast('✅ Partner bilgileri kaydedildi.', 'success');
                 await listenForTrade(currentUser.uid);
+                loadTradeList(currentUser.uid);
                 return true;
             } catch (error) {
                 console.error('Join trade error:', error);
@@ -1266,7 +1891,7 @@
             }
         }
 
-        // ---- Kod Doğrula ----
+        // ---- Kod Doğrula (Ana) ----
         async function verifyCode(code) {
             if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
             if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.', 'error'); return; }
@@ -1298,9 +1923,60 @@
                     }
                     resetUI();
                     await listenForTrade(currentUser.uid);
+                    loadTradeList(currentUser.uid);
                 }
             } catch (error) {
                 console.error('Verify code error:', error);
+                showToast('Doğrulama hatası: ' + error.message, 'error');
+            }
+        }
+
+        // ---- Partner Kod Doğrula (Trade Screen) ----
+        async function verifyPartnerCode(code) {
+            if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
+            if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.', 'error'); return; }
+            try {
+                const docRef = doc(db, "trades", currentTradeId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
+                const data = docSnap.data();
+                if (data.creatorId === currentUser.uid) {
+                    if (data.creatorCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                    await updateDoc(docRef, { creatorConfirmed: true, updatedAt: new Date().toISOString() });
+                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                    // Partner kod bölümünü güncelle
+                    if (data.partnerCode) {
+                        partnerPartnerCode.textContent = data.partnerCode;
+                        partnerPartnerCodeBox.style.display = 'block';
+                        partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
+                        partnerCodeStatus.className = 'status-badge ready';
+                    }
+                } else if (data.partnerId === currentUser.uid) {
+                    if (data.partnerCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                    await updateDoc(docRef, { partnerConfirmed: true, updatedAt: new Date().toISOString() });
+                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                    if (data.creatorCode) {
+                        partnerPartnerCode.textContent = data.creatorCode;
+                        partnerPartnerCodeBox.style.display = 'block';
+                        partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                        partnerCodeStatus.className = 'status-badge ready';
+                    }
+                }
+                const updated = (await getDoc(docRef)).data();
+                if (updated.creatorConfirmed && updated.partnerConfirmed) {
+                    await updateDoc(docRef, { status: 'completed', updatedAt: new Date().toISOString() });
+                    showToast('🎉 Takas başarıyla tamamlandı!', 'success');
+                    if (updated.creatorId === currentUser.uid) {
+                        showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
+                    } else {
+                        showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
+                    }
+                    resetUI();
+                    await listenForTrade(currentUser.uid);
+                    loadTradeList(currentUser.uid);
+                }
+            } catch (error) {
+                console.error('Verify partner code error:', error);
                 showToast('Doğrulama hatası: ' + error.message, 'error');
             }
         }
@@ -1310,26 +1986,68 @@
             const params = new URLSearchParams(window.location.search);
             const tradeId = params.get('tradeId');
             if (!tradeId || !currentUser) return;
-            if (currentTradeId) { showToast('Zaten aktif bir takasınız var.', 'warning'); return; }
+
+            // Eğer zaten aktif takas varsa
+            if (currentTradeId) {
+                // Eğer bu takas farklıysa, yenisine geç
+                if (currentTradeId !== tradeId) {
+                    resetUI();
+                } else {
+                    return;
+                }
+            }
+
             try {
                 const docRef = doc(db, "trades", tradeId);
                 const docSnap = await getDoc(docRef);
                 if (!docSnap.exists()) { showToast('Geçersiz takas linki.', 'error'); return; }
                 const data = docSnap.data();
-                if (data.creatorId === currentUser.uid) { showToast('Bu takas size ait.', 'warning'); return; }
-                if (data.partnerId) { showToast('Bu takasa zaten bir partner katılmış.', 'error'); return; }
-                if (data.status !== 'waiting_partner') { showToast('Bu takas artık geçerli değil.', 'error'); return; }
-                const pUsername = prompt('Valorant kullanıcı adınızı girin:');
-                if (pUsername === null) return;
-                if (!pUsername.trim()) { showToast('Kullanıcı adı boş olamaz.', 'error'); return; }
-                const pPassword = prompt('Valorant şifrenizi girin:');
-                if (pPassword === null) return;
-                if (!pPassword.trim()) { showToast('Şifre boş olamaz.', 'error'); return; }
-                await joinTradeAsPartner(tradeId, pUsername.trim(), pPassword.trim());
+                if (data.creatorId === currentUser.uid) {
+                    showToast('Bu takas size ait.', 'warning');
+                    // Creator ise normal takas ekranına yönlendir
+                    await listenForTrade(currentUser.uid);
+                    return;
+                }
+                if (data.partnerId) {
+                    // Zaten partner varsa, takas ekranını göster
+                    if (data.partnerId === currentUser.uid) {
+                        currentTradeId = tradeId;
+                        currentTradeData = data;
+                        setupTradeUI(tradeId, data, currentUser.uid);
+                        return;
+                    } else {
+                        showToast('Bu takasa zaten bir partner katılmış.', 'error');
+                        return;
+                    }
+                }
+                if (data.status !== 'waiting_partner') {
+                    showToast('Bu takas artık geçerli değil.', 'error');
+                    return;
+                }
+
+                // Partner henüz katılmamış, takas ekranını göster
+                currentTradeId = tradeId;
+                currentTradeData = data;
+                showTradeScreen(data, currentUser.uid);
+                partnerFormContainer.style.display = 'block';
+
+                // Partner form işlemini bağla
+                joinTradeBtn.onclick = async () => {
+                    const pUsername = partnerUsername.value.trim();
+                    const pPassword = partnerPassword.value.trim();
+                    if (!pUsername || !pPassword) {
+                        showToast('Lütfen tüm alanları doldurun.', 'error');
+                        return;
+                    }
+                    await joinTradeAsPartner(tradeId, pUsername, pPassword);
+                };
+
+                // URL'den tradeId temizle
                 if (window.history && window.history.replaceState) {
                     const newUrl = window.location.pathname + window.location.search.replace(/[?&]tradeId=[^&]*/, '');
                     window.history.replaceState({}, '', newUrl);
                 }
+
             } catch (error) {
                 console.error('Handle partner join error:', error);
                 showToast('Katılım başarısız: ' + error.message, 'error');
@@ -1408,15 +2126,7 @@
             }
         });
 
-        refreshTradeBtn.addEventListener('click', () => {
-            if (currentUser) {
-                listenForTrade(currentUser.uid);
-                showToast('Durum yenilendi.', 'success');
-            } else {
-                showToast('Önce giriş yapın!', 'error');
-            }
-        });
-
+        // Ana kod doğrulama
         confirmCodeBtn.addEventListener('click', async () => {
             const code = codeInput.value.trim();
             await verifyCode(code);
@@ -1430,14 +2140,36 @@
             e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
         });
 
+        // Partner kod doğrulama
+        partnerConfirmCodeBtn.addEventListener('click', async () => {
+            const code = partnerCodeInput.value.trim();
+            await verifyPartnerCode(code);
+            partnerCodeInput.value = '';
+        });
+
+        partnerCodeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') partnerConfirmCodeBtn.click();
+        });
+        partnerCodeInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+        });
+
         // ---- Auth State ----
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 setUser(user);
                 showApp();
+
+                // Takas listesini yükle
+                await loadTradeList(user.uid);
+
+                // Aktif takası dinle
                 await listenForTrade(user.uid);
+
+                // Partner katılımını kontrol et
                 await handlePartnerJoin();
+
                 console.log('👤 User:', user.uid, user.email);
             } else {
                 currentUser = null;
@@ -1449,10 +2181,14 @@
         // ---- Init ----
         window.addEventListener('load', () => {
             const params = new URLSearchParams(window.location.search);
-            if (params.get('tradeId')) console.log('🔗 Trade ID from URL:', params.get('tradeId'));
-            console.log('🚀 ValoTakas v3.0 loaded');
+            if (params.get('tradeId')) {
+                console.log('🔗 Trade ID from URL:', params.get('tradeId'));
+                // Eğer kullanıcı zaten giriş yapmışsa handlePartnerJoin çağrılacak
+            }
+            console.log('🚀 ValoTakas v4.0 loaded');
         });
 
+        // ---- Global Error ----
         window.addEventListener('unhandledrejection', (event) => {
             console.error('Unhandled Promise Rejection:', event.reason);
             if (event.reason?.message) showToast('Beklenmeyen hata: ' + event.reason.message, 'error');
