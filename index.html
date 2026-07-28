@@ -511,4 +511,937 @@
                             <i class="fas fa-sync-alt"></i> Yenile
                         </button>
                     </div>
-                    <div id="tradeListContainer" style="display:flex;flex-direction:
+                    <div id="tradeListContainer" style="display:flex;flex-direction:column;gap:12px;max-height:320px;overflow-y:auto;padding-right:4px;">
+                        <div style="text-align:center;color:#5b6f82;padding:30px 0;font-size:14px;">
+                            <i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;"></i>
+                            Henüz takasın yok.
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    #tradeListContainer::-webkit-scrollbar { width: 4px; }
+                    #tradeListContainer::-webkit-scrollbar-track { background: #0f1923; border-radius: 4px; }
+                    #tradeListContainer::-webkit-scrollbar-thumb { background: #ff4655; border-radius: 4px; }
+                    .trade-item { background: #0f1923; padding: 14px 18px; border-radius: 16px; border: 1px solid #2a3a4a; display: flex; justify-content: space-between; align-items: center; transition: all 0.35s cubic-bezier(0.22,1,0.36,1); animation: slideItem 0.3s ease; }
+                    .trade-item:hover { border-color: #3a4a5a; transform: translateX(4px); }
+                    .trade-item .info .title { font-weight: 600; font-size: 14px; color: #fff; }
+                    .trade-item .info .sub { font-size: 12px; color: #8899aa; }
+                    .trade-item .status-badge { font-size: 10px; font-weight: 700; padding: 3px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .trade-item .status-badge.waiting { background: rgba(255,170,0,0.15); color: #ffaa00; }
+                    .trade-item .status-badge.active { background: rgba(0,212,170,0.15); color: #00d4aa; }
+                    .trade-item .status-badge.completed { background: rgba(0,212,170,0.2); color: #00d4aa; }
+                    .trade-item .delete-btn { background: transparent; border: none; color: #8899aa; cursor: pointer; padding: 6px 10px; border-radius: 8px; }
+                    .trade-item .delete-btn:hover { color: #ff4655; background: rgba(255,70,85,0.1); transform: scale(1.1); }
+                    @keyframes slideItem { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+                </style>
+            `;
+        }
+
+        // ================================================================
+        // TAKAS SAYFASI EVENT'LERİ
+        // ================================================================
+        function initTakasPage() {
+            const openTradeBtn = document.getElementById('openTradeBtn');
+            const tradeForm = document.getElementById('tradeForm');
+            const tradeUsername = document.getElementById('tradeUsername');
+            const tradePassword = document.getElementById('tradePassword');
+            const confirmTradeBtn = document.getElementById('confirmTradeBtn');
+            const cancelTradeBtn = document.getElementById('cancelTradeBtn');
+            const linkBox = document.getElementById('linkBox');
+            const tradeLinkInput = document.getElementById('tradeLinkInput');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const copyLinkBtnSmall = document.getElementById('copyLinkBtnSmall');
+            const deleteLinkBtn = document.getElementById('deleteLinkBtn');
+            const manualLinkInput = document.getElementById('manualLinkInput');
+            const joinLinkBtn = document.getElementById('joinLinkBtn');
+            const statusBox = document.getElementById('statusBox');
+            const statusDesc = document.getElementById('statusDesc');
+            const codeSection = document.getElementById('codeSection');
+            const myCodeDisplay = document.getElementById('myCodeDisplay');
+            const codeInput = document.getElementById('codeInput');
+            const confirmCodeBtn = document.getElementById('confirmCodeBtn');
+            const partnerCodeBox = document.getElementById('partnerCodeBox');
+            const partnerCodeDisplay = document.getElementById('partnerCodeDisplay');
+            const codeStatus = document.getElementById('codeStatus');
+
+            // Takas oluştur
+            async function createTrade(username, password) {
+                if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return false; }
+                if (currentTradeId) { showToast('Zaten aktif bir takasınız var.', 'warning'); return false; }
+                try {
+                    const tradeData = {
+                        creatorId: currentUser.uid,
+                        creatorUsername: username,
+                        creatorPassword: password,
+                        creatorCode: generateCode(),
+                        creatorConfirmed: false,
+                        partnerId: null,
+                        partnerUsername: '',
+                        partnerPassword: '',
+                        partnerCode: '',
+                        partnerConfirmed: false,
+                        status: 'waiting_partner',
+                        createdAt: new Date().toISOString()
+                    };
+                    const docRef = doc(collection(db, "trades"));
+                    await setDoc(docRef, tradeData);
+                    currentTradeId = docRef.id;
+                    currentTradeData = tradeData;
+                    showToast('✅ Takas oluşturuldu!', 'success');
+                    await listenForTrade(currentUser.uid);
+                    loadMenuPage();
+                    return true;
+                } catch (error) {
+                    console.error('Create trade error:', error);
+                    showToast('Takas oluşturulamadı: ' + error.message, 'error');
+                    return false;
+                }
+            }
+
+            // Takas UI güncelle
+            function setupTradeUI(tradeId, data, userId) {
+                currentTradeId = tradeId;
+                currentTradeData = data;
+                if (tradeForm) tradeForm.style.display = 'none';
+                if (linkBox) linkBox.style.display = 'none';
+                if (statusBox) statusBox.style.display = 'none';
+                if (codeSection) codeSection.style.display = 'none';
+                if (partnerCodeBox) partnerCodeBox.style.display = 'none';
+
+                if (data.status === 'waiting_partner' && data.creatorId === userId) {
+                    const link = getTradeLink(tradeId);
+                    if (tradeLinkInput) tradeLinkInput.value = link;
+                    if (linkBox) linkBox.style.display = 'flex';
+                    if (statusBox) { statusBox.style.display = 'block';
+                        statusDesc.textContent = 'Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.'; }
+                    console.log('✅ Link:', link);
+                    return;
+                }
+
+                if (data.status === 'waiting_codes') {
+                    if (codeSection) codeSection.style.display = 'block';
+                    if (statusBox) { statusBox.style.display = 'block';
+                        statusDesc.textContent = 'Kod doğrulama aşaması.'; }
+
+                    if (data.creatorId === userId) {
+                        if (myCodeDisplay) myCodeDisplay.textContent = data.creatorCode || '------';
+                        if (data.partnerCode) {
+                            if (partnerCodeDisplay) partnerCodeDisplay.textContent = data.partnerCode;
+                            if (partnerCodeBox) partnerCodeBox.style.display = 'block';
+                            if (codeStatus) { codeStatus.textContent = 'PARTNER KODU GELDİ';
+                                codeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                codeStatus.style.color = '#00d4aa'; }
+                        } else {
+                            if (partnerCodeBox) partnerCodeBox.style.display = 'none';
+                            if (codeStatus) { codeStatus.textContent = 'PARTNER BEKLENİYOR';
+                                codeStatus.style.background = 'rgba(255,170,0,0.15)';
+                                codeStatus.style.color = '#ffaa00'; }
+                        }
+                    } else if (data.partnerId === userId) {
+                        if (myCodeDisplay) myCodeDisplay.textContent = data.partnerCode || '------';
+                        if (data.creatorCode) {
+                            if (partnerCodeDisplay) partnerCodeDisplay.textContent = data.creatorCode;
+                            if (partnerCodeBox) partnerCodeBox.style.display = 'block';
+                            if (codeStatus) { codeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                                codeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                codeStatus.style.color = '#00d4aa'; }
+                        } else {
+                            if (partnerCodeBox) partnerCodeBox.style.display = 'none';
+                            if (codeStatus) { codeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
+                                codeStatus.style.background = 'rgba(255,170,0,0.15)';
+                                codeStatus.style.color = '#ffaa00'; }
+                        }
+                    }
+                    // Takas ekranına git
+                    showPage('takasekrani');
+                    return;
+                }
+
+                if (data.status === 'completed') {
+                    showToast('🎉 Takas başarıyla tamamlandı!', 'success');
+                    resetUI();
+                    return;
+                }
+                if (data.status === 'cancelled') {
+                    showToast('Takas iptal edildi.', 'warning');
+                    resetUI();
+                    return;
+                }
+            }
+
+            // Takas dinle
+            async function listenForTrade(userId) {
+                if (unsubscribeTrade) { unsubscribeTrade();
+                    unsubscribeTrade = null; }
+                try {
+                    const qCreator = query(collection(db, "trades"),
+                        where("creatorId", "==", userId),
+                        where("status", "in", ["waiting_partner", "waiting_codes"])
+                    );
+                    const snapCreator = await getDocs(qCreator);
+                    if (!snapCreator.empty) {
+                        const docSnap = snapCreator.docs[0];
+                        currentTradeId = docSnap.id;
+                        currentTradeData = docSnap.data();
+                        setupTradeUI(docSnap.id, docSnap.data(), userId);
+                        unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                            if (doc.exists()) {
+                                currentTradeData = doc.data();
+                                setupTradeUI(doc.id, doc.data(), userId);
+                            } else {
+                                resetUI();
+                                showToast('Takas sonlandırıldı.', 'warning');
+                            }
+                        });
+                        return;
+                    }
+                    const qPartner = query(collection(db, "trades"),
+                        where("partnerId", "==", userId),
+                        where("status", "in", ["waiting_codes"])
+                    );
+                    const snapPartner = await getDocs(qPartner);
+                    if (!snapPartner.empty) {
+                        const docSnap = snapPartner.docs[0];
+                        currentTradeId = docSnap.id;
+                        currentTradeData = docSnap.data();
+                        setupTradeUI(docSnap.id, docSnap.data(), userId);
+                        unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                            if (doc.exists()) {
+                                currentTradeData = doc.data();
+                                setupTradeUI(doc.id, doc.data(), userId);
+                            } else {
+                                resetUI();
+                                showToast('Takas sonlandırıldı.', 'warning');
+                            }
+                        });
+                        return;
+                    }
+                    resetUI();
+                } catch (error) {
+                    console.error('ListenForTrade error:', error);
+                    showToast('Takas durumu alınamadı: ' + error.message, 'error');
+                }
+            }
+
+            function resetUI() {
+                if (tradeForm) tradeForm.style.display = 'none';
+                if (linkBox) linkBox.style.display = 'none';
+                if (statusBox) statusBox.style.display = 'none';
+                if (codeSection) codeSection.style.display = 'none';
+                if (partnerCodeBox) partnerCodeBox.style.display = 'none';
+                currentTradeId = null;
+                currentTradeData = null;
+                if (unsubscribeTrade) {
+                    unsubscribeTrade();
+                    unsubscribeTrade = null;
+                }
+                // localStorage temizle
+                localStorage.removeItem('valotakas_trade');
+            }
+
+            // Kod doğrula
+            async function verifyCode(code) {
+                if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
+                if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.', 'error'); return; }
+                try {
+                    const docRef = doc(db, "trades", currentTradeId);
+                    const docSnap = await getDoc(docRef);
+                    if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
+                    const data = docSnap.data();
+
+                    if (data.creatorId === currentUser.uid) {
+                        if (data.creatorCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                        await updateDoc(docRef, { creatorConfirmed: true, updatedAt: new Date().toISOString() });
+                        showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                    } else if (data.partnerId === currentUser.uid) {
+                        if (data.partnerCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                        await updateDoc(docRef, { partnerConfirmed: true, updatedAt: new Date().toISOString() });
+                        showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                    } else {
+                        showToast('Bu takasa ait değilsiniz.', 'error');
+                        return;
+                    }
+
+                    const updated = (await getDoc(docRef)).data();
+                    if (updated.creatorConfirmed && updated.partnerConfirmed) {
+                        await updateDoc(docRef, { status: 'completed', updatedAt: new Date().toISOString() });
+                        showToast('🎉 Takas başarıyla tamamlandı!', 'success');
+                        if (updated.creatorId === currentUser.uid) {
+                            showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
+                        } else {
+                            showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
+                        }
+                        resetUI();
+                        await listenForTrade(currentUser.uid);
+                        loadMenuPage();
+                    }
+                } catch (error) {
+                    console.error('Verify code error:', error);
+                    showToast('Doğrulama hatası: ' + error.message, 'error');
+                }
+            }
+
+            // Event'leri bağla
+            if (openTradeBtn) {
+                openTradeBtn.addEventListener('click', () => {
+                    if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return; }
+                    if (tradeForm) {
+                        const isActive = tradeForm.style.display === 'flex';
+                        tradeForm.style.display = isActive ? 'none' : 'flex';
+                        if (!isActive) {
+                            if (tradeUsername) tradeUsername.value = '';
+                            if (tradePassword) tradePassword.value = '';
+                            if (tradeUsername) tradeUsername.focus();
+                        }
+                    }
+                });
+            }
+
+            if (confirmTradeBtn) {
+                confirmTradeBtn.addEventListener('click', async () => {
+                    const username = tradeUsername ? tradeUsername.value.trim() : '';
+                    const password = tradePassword ? tradePassword.value.trim() : '';
+                    if (!username || !password) {
+                        showToast('Lütfen Valorant kullanıcı adı ve şifrenizi girin.', 'error');
+                        return;
+                    }
+                    await createTrade(username, password);
+                    if (tradeForm) tradeForm.style.display = 'none';
+                });
+            }
+
+            if (cancelTradeBtn) {
+                cancelTradeBtn.addEventListener('click', () => {
+                    if (tradeForm) tradeForm.style.display = 'none';
+                });
+            }
+
+            // Kopyala
+            async function copyLinkFn() {
+                const link = tradeLinkInput ? tradeLinkInput.value : '';
+                if (!link || link === 'Link oluşturuluyor...') {
+                    showToast('Önce takas oluşturun!', 'error');
+                    return;
+                }
+                try {
+                    await navigator.clipboard.writeText(link);
+                    const btns = [copyLinkBtn, copyLinkBtnSmall];
+                    btns.forEach(btn => {
+                        if (btn) { btn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı!';
+                            btn.style.background = '#00d4aa'; }
+                    });
+                    showToast('✅ Link kopyalandı!', 'success');
+                    setTimeout(() => {
+                        btns.forEach(btn => {
+                            if (btn) { btn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                                btn.style.background = ''; }
+                        });
+                    }, 3000);
+                } catch {
+                    if (tradeLinkInput) { tradeLinkInput.select();
+                        document.execCommand('copy'); }
+                    showToast('✅ Link kopyalandı!', 'success');
+                }
+            }
+
+            if (copyLinkBtn) copyLinkBtn.addEventListener('click', copyLinkFn);
+            if (copyLinkBtnSmall) copyLinkBtnSmall.addEventListener('click', copyLinkFn);
+
+            // İptal
+            if (deleteLinkBtn) {
+                deleteLinkBtn.addEventListener('click', async () => {
+                    if (!currentTradeId || !currentUser) {
+                        showToast('Aktif takas bulunamadı.', 'warning');
+                        return;
+                    }
+                    if (!confirm('Bu takası iptal etmek istediğinize emin misiniz?')) return;
+                    try {
+                        const docRef = doc(db, "trades", currentTradeId);
+                        await updateDoc(docRef, { status: 'cancelled', updatedAt: new Date().toISOString() });
+                        showToast('Takas iptal edildi.', 'warning');
+                        resetUI();
+                        await listenForTrade(currentUser.uid);
+                        loadMenuPage();
+                    } catch (error) {
+                        console.error('Cancel trade error:', error);
+                        showToast('İptal başarısız: ' + error.message, 'error');
+                    }
+                });
+            }
+
+            // Manuel Link ile Katıl
+            if (joinLinkBtn) {
+                joinLinkBtn.addEventListener('click', async () => {
+                    const link = manualLinkInput ? manualLinkInput.value.trim() : '';
+                    if (!link) { showToast('Lütfen bir link girin.', 'warning'); return; }
+
+                    let tradeId = null;
+                    try {
+                        const url = new URL(link);
+                        tradeId = url.searchParams.get('tradeId');
+                    } catch {
+                        const match = link.match(/[?&]tradeId=([^&]+)/);
+                        if (match) tradeId = match[1];
+                    }
+
+                    if (!tradeId) { showToast('Geçersiz link!', 'error'); return; }
+
+                    if (currentTradeId) {
+                        if (currentTradeId === tradeId) { showToast('Zaten bu takasın içindesiniz.', 'warning'); return; }
+                        resetUI();
+                    }
+
+                    try {
+                        const docRef = doc(db, "trades", tradeId);
+                        const docSnap = await getDoc(docRef);
+                        if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
+                        const data = docSnap.data();
+
+                        if (data.creatorId === currentUser.uid) {
+                            showToast('Bu takas size ait.', 'warning');
+                            await listenForTrade(currentUser.uid);
+                            return;
+                        }
+
+                        if (data.partnerId) {
+                            if (data.partnerId === currentUser.uid) {
+                                currentTradeId = tradeId;
+                                currentTradeData = data;
+                                setupTradeUI(tradeId, data, currentUser.uid);
+                                return;
+                            } else {
+                                showToast('Bu takasa zaten bir partner katılmış.', 'error');
+                                return;
+                            }
+                        }
+
+                        if (data.status !== 'waiting_partner') {
+                            showToast('Bu takas artık geçerli değil.', 'error');
+                            return;
+                        }
+
+                        currentTradeId = tradeId;
+                        currentTradeData = data;
+                        // Takas ekranını göster
+                        if (manualLinkInput) manualLinkInput.value = '';
+                        showPage('takasekrani');
+                        // Takas ekranını güncelle
+                        setTimeout(() => {
+                            if (typeof window.initTakasEkrani === 'function') {
+                                window.initTakasEkrani(currentTradeId, data);
+                            }
+                        }, 100);
+
+                    } catch (error) {
+                        console.error('Join by link error:', error);
+                        showToast('Katılım başarısız: ' + error.message, 'error');
+                    }
+                });
+            }
+
+            // Kod doğrulama
+            if (confirmCodeBtn) {
+                confirmCodeBtn.addEventListener('click', async () => {
+                    const code = codeInput ? codeInput.value.trim() : '';
+                    await verifyCode(code);
+                    if (codeInput) codeInput.value = '';
+                });
+            }
+
+            if (codeInput) {
+                codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && confirmCodeBtn) confirmCodeBtn
+                    .click(); });
+                codeInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+                });
+            }
+
+            // Başlangıçta aktif trade varsa göster
+            if (currentTradeId && currentTradeData) {
+                setupTradeUI(currentTradeId, currentTradeData, currentUser.uid);
+            } else if (currentUser) {
+                listenForTrade(currentUser.uid);
+            }
+        }
+
+        // ================================================================
+        // TAKAS EKRANI SAYFASI EVENT'LERİ
+        // ================================================================
+        function initTakasEkraniPage() {
+            const screenMyPhoto = document.getElementById('screenMyPhoto');
+            const screenMyName = document.getElementById('screenMyName');
+            const screenMyStatus = document.getElementById('screenMyStatus');
+            const screenPartnerPhoto = document.getElementById('screenPartnerPhoto');
+            const screenPartnerName = document.getElementById('screenPartnerName');
+            const screenPartnerStatus = document.getElementById('screenPartnerStatus');
+            const partnerFormContainer = document.getElementById('partnerFormContainer');
+            const partnerUsername = document.getElementById('partnerUsername');
+            const partnerPassword = document.getElementById('partnerPassword');
+            const joinTradeBtn = document.getElementById('joinTradeBtn');
+            const partnerCodeSection = document.getElementById('partnerCodeSection');
+            const partnerMyCode = document.getElementById('partnerMyCode');
+            const partnerCodeInput = document.getElementById('partnerCodeInput');
+            const partnerConfirmCodeBtn = document.getElementById('partnerConfirmCodeBtn');
+            const partnerPartnerCodeBox = document.getElementById('partnerPartnerCodeBox');
+            const partnerPartnerCode = document.getElementById('partnerPartnerCode');
+            const partnerCodeStatus = document.getElementById('partnerCodeStatus');
+
+            // Takas ekranını güncelle
+            window.initTakasEkrani = function(tradeId, data) {
+                if (!data) {
+                    // Mevcut trade'den al
+                    if (currentTradeData) data = currentTradeData;
+                    else return;
+                }
+
+                if (screenMyPhoto) screenMyPhoto.src = currentUser?.photoURL || 'https://ui-avatars.com/api/?name=Ben&background=ff4655&color=fff&size=64';
+                if (screenMyName) screenMyName.textContent = currentUser?.displayName || 'Ben';
+
+                const partnerId = data.creatorId === currentUser?.uid ? data.partnerId : data.creatorId;
+                const partnerName = data.creatorId === currentUser?.uid ? data.partnerUsername : data.creatorUsername;
+
+                if (partnerId) {
+                    // Partner katılmış
+                    if (screenPartnerPhoto) screenPartnerPhoto.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(
+                        partnerName || 'Partner') + '&background=ff4655&color=fff&size=64';
+                    if (screenPartnerName) screenPartnerName.textContent = partnerName || 'Partner';
+
+                    const isPartnerReady = data.creatorId === currentUser?.uid ? data.partnerConfirmed : data
+                    .creatorConfirmed;
+                    const isMeReady = data.creatorId === currentUser?.uid ? data.creatorConfirmed : data.partnerConfirmed;
+
+                    if (screenPartnerStatus) {
+                        screenPartnerStatus.textContent = isPartnerReady ? 'Hazır' : 'Bekleniyor';
+                        screenPartnerStatus.className = isPartnerReady ? 'status-text ready' : 'status-text waiting';
+                    }
+                    if (screenPartnerPhoto) {
+                        screenPartnerPhoto.className = isPartnerReady ? 'avatar ready' : 'avatar waiting';
+                    }
+                    if (screenMyStatus) {
+                        screenMyStatus.textContent = isMeReady ? 'Hazır' : 'Hazır değil';
+                        screenMyStatus.className = isMeReady ? 'status-text ready' : 'status-text waiting';
+                    }
+                    if (screenMyPhoto) {
+                        screenMyPhoto.className = isMeReady ? 'avatar ready' : 'avatar waiting';
+                    }
+
+                    if (partnerFormContainer) partnerFormContainer.style.display = 'none';
+                    if (partnerCodeSection) partnerCodeSection.style.display = 'block';
+
+                    if (data.creatorId === currentUser?.uid) {
+                        if (partnerMyCode) partnerMyCode.textContent = data.creatorCode || '------';
+                        if (data.partnerCode) {
+                            if (partnerPartnerCode) partnerPartnerCode.textContent = data.partnerCode;
+                            if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'block';
+                            if (partnerCodeStatus) {
+                                partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
+                                partnerCodeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                partnerCodeStatus.style.color = '#00d4aa';
+                            }
+                        } else {
+                            if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'none';
+                            if (partnerCodeStatus) {
+                                partnerCodeStatus.textContent = 'PARTNER BEKLENİYOR';
+                                partnerCodeStatus.style.background = 'rgba(255,170,0,0.15)';
+                                partnerCodeStatus.style.color = '#ffaa00';
+                            }
+                        }
+                    } else {
+                        if (partnerMyCode) partnerMyCode.textContent = data.partnerCode || '------';
+                        if (data.creatorCode) {
+                            if (partnerPartnerCode) partnerPartnerCode.textContent = data.creatorCode;
+                            if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'block';
+                            if (partnerCodeStatus) {
+                                partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                                partnerCodeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                partnerCodeStatus.style.color = '#00d4aa';
+                            }
+                        } else {
+                            if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'none';
+                            if (partnerCodeStatus) {
+                                partnerCodeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
+                                partnerCodeStatus.style.background = 'rgba(255,170,0,0.15)';
+                                partnerCodeStatus.style.color = '#ffaa00';
+                            }
+                        }
+                    }
+                } else {
+                    // Partner henüz katılmadı
+                    if (screenPartnerPhoto) { screenPartnerPhoto.className = 'avatar waiting';
+                        screenPartnerPhoto.src = 'https://ui-avatars.com/api/?name=Partner&background=ff4655&color=fff&size=64'; }
+                    if (screenPartnerName) screenPartnerName.textContent = '???';
+                    if (screenPartnerStatus) { screenPartnerStatus.textContent = 'Bekleniyor';
+                        screenPartnerStatus.className = 'status-text waiting'; }
+                    if (screenMyStatus) { screenMyStatus.textContent = 'Hazır';
+                        screenMyStatus.className = 'status-text ready'; }
+                    if (screenMyPhoto) screenMyPhoto.className = 'avatar ready';
+
+                    if (partnerFormContainer) partnerFormContainer.style.display = 'block';
+                    if (partnerCodeSection) partnerCodeSection.style.display = 'none';
+
+                    // Partner form butonu
+                    if (joinTradeBtn) {
+                        joinTradeBtn.onclick = async () => {
+                            const pUsername = partnerUsername ? partnerUsername.value.trim() : '';
+                            const pPassword = partnerPassword ? partnerPassword.value.trim() : '';
+                            if (!pUsername || !pPassword) {
+                                showToast('Lütfen tüm alanları doldurun.', 'error');
+                                return;
+                            }
+                            await joinTradeAsPartner(currentTradeId, pUsername, pPassword);
+                        };
+                    }
+                }
+            };
+
+            // Partner katılma
+            async function joinTradeAsPartner(tradeId, username, password) {
+                if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return false; }
+                try {
+                    const docRef = doc(db, "trades", tradeId);
+                    const docSnap = await getDoc(docRef);
+                    if (!docSnap.exists()) { showToast('Geçersiz takas linki.', 'error'); return false; }
+                    const data = docSnap.data();
+                    if (data.creatorId === currentUser.uid) { showToast('Bu takas size ait.', 'warning'); return false; }
+                    if (data.partnerId) { showToast('Bu takasa zaten bir partner katılmış.', 'error'); return false; }
+                    if (data.status !== 'waiting_partner') { showToast('Bu takas artık geçerli değil.', 'error'); return false; }
+                    const partnerCode = generateCode();
+                    await updateDoc(docRef, {
+                        partnerId: currentUser.uid,
+                        partnerUsername: username,
+                        partnerPassword: password,
+                        partnerCode: partnerCode,
+                        status: 'waiting_codes',
+                        updatedAt: new Date().toISOString()
+                    });
+                    showToast('✅ Partner bilgileri kaydedildi.', 'success');
+                    await listenForTrade(currentUser.uid);
+                    loadMenuPage();
+                    return true;
+                } catch (error) {
+                    console.error('Join trade error:', error);
+                    showToast('Katılım başarısız: ' + error.message, 'error');
+                    return false;
+                }
+            }
+
+            // Partner kod doğrula
+            if (partnerConfirmCodeBtn) {
+                partnerConfirmCodeBtn.addEventListener('click', async () => {
+                    const code = partnerCodeInput ? partnerCodeInput.value.trim() : '';
+                    if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
+                    if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.',
+                        'error'); return; }
+                    try {
+                        const docRef = doc(db, "trades", currentTradeId);
+                        const docSnap = await getDoc(docRef);
+                        if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
+                        const data = docSnap.data();
+
+                        if (data.creatorId === currentUser.uid) {
+                            if (data.creatorCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                            await updateDoc(docRef, { creatorConfirmed: true, updatedAt: new Date().toISOString() });
+                            showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                            if (data.partnerCode && partnerPartnerCode) {
+                                partnerPartnerCode.textContent = data.partnerCode;
+                                if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'block';
+                                if (partnerCodeStatus) {
+                                    partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
+                                    partnerCodeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                    partnerCodeStatus.style.color = '#00d4aa';
+                                }
+                            }
+                        } else if (data.partnerId === currentUser.uid) {
+                            if (data.partnerCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
+                            await updateDoc(docRef, { partnerConfirmed: true, updatedAt: new Date().toISOString() });
+                            showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
+                            if (data.creatorCode && partnerPartnerCode) {
+                                partnerPartnerCode.textContent = data.creatorCode;
+                                if (partnerPartnerCodeBox) partnerPartnerCodeBox.style.display = 'block';
+                                if (partnerCodeStatus) {
+                                    partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                                    partnerCodeStatus.style.background = 'rgba(0,212,170,0.15)';
+                                    partnerCodeStatus.style.color = '#00d4aa';
+                                }
+                            }
+                        }
+
+                        const updated = (await getDoc(docRef)).data();
+                        if (updated.creatorConfirmed && updated.partnerConfirmed) {
+                            await updateDoc(docRef, { status: 'completed', updatedAt: new Date().toISOString() });
+                            showToast('🎉 Takas başarıyla tamamlandı!', 'success');
+                            if (updated.creatorId === currentUser.uid) {
+                                showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
+                            } else {
+                                showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
+                            }
+                            resetUI();
+                            await listenForTrade(currentUser.uid);
+                            loadMenuPage();
+                        }
+                    } catch (error) {
+                        console.error('Verify partner code error:', error);
+                        showToast('Doğrulama hatası: ' + error.message, 'error');
+                    }
+                    if (partnerCodeInput) partnerCodeInput.value = '';
+                });
+            }
+
+            if (partnerCodeInput) {
+                partnerCodeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && partnerConfirmCodeBtn)
+                        partnerConfirmCodeBtn.click(); });
+                partnerCodeInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+                });
+            }
+
+            // Mevcut trade varsa göster
+            if (currentTradeId && currentTradeData) {
+                setTimeout(() => {
+                    if (typeof window.initTakasEkrani === 'function') {
+                        window.initTakasEkrani(currentTradeId, currentTradeData);
+                    }
+                }, 100);
+            }
+        }
+
+        // ================================================================
+        // MENU SAYFASI EVENT'LERİ
+        // ================================================================
+        function initMenuPage() {
+            const tradeListContainer = document.getElementById('tradeListContainer');
+            const refreshListBtn = document.getElementById('refreshListBtn');
+
+            async function loadTradeList(userId) {
+                try {
+                    const q = query(collection(db, "trades"),
+                        where("creatorId", "==", userId),
+                        where("status", "in", ["waiting_partner", "waiting_codes", "completed"])
+                    );
+                    const snap = await getDocs(q);
+                    if (snap.empty) {
+                        if (tradeListContainer) {
+                            tradeListContainer.innerHTML = `
+                                <div style="text-align:center;color:#5b6f82;padding:30px 0;font-size:14px;">
+                                    <i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;"></i>
+                                    Henüz takasın yok.
+                                </div>
+                            `;
+                        }
+                        return;
+                    }
+                    let html = '';
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const statusMap = {
+                            'waiting_partner': { label: 'Bekliyor', cls: 'waiting' },
+                            'waiting_codes': { label: 'Aktif', cls: 'active' },
+                            'completed': { label: 'Tamamlandı', cls: 'completed' }
+                        };
+                        const st = statusMap[data.status] || { label: data.status, cls: 'waiting' };
+                        html += `
+                            <div class="trade-item">
+                                <div class="info">
+                                    <div class="title">${data.creatorUsername || 'İsimsiz'}</div>
+                                    <div class="sub">${data.partnerUsername ? 'Partner: ' + data.partnerUsername : 'Partner bekleniyor'}</div>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <span class="status-badge ${st.cls}">${st.label}</span>
+                                    <button class="delete-btn" data-trade-id="${doc.id}"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    if (tradeListContainer) tradeListContainer.innerHTML = html;
+
+                    // Silme işlemleri
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const tradeId = btn.dataset.tradeId;
+                            if (confirm('Bu takası silmek istediğinize emin misiniz?')) {
+                                try {
+                                    await deleteDoc(doc(db, "trades", tradeId));
+                                    showToast('Takas silindi.', 'success');
+                                    loadTradeList(userId);
+                                } catch (e) {
+                                    showToast('Silme hatası: ' + e.message, 'error');
+                                }
+                            }
+                        });
+                    });
+                } catch (e) {
+                    console.error('Load trade list error:', e);
+                    showToast('Takas listesi yüklenemedi: ' + e.message, 'error');
+                }
+            }
+
+            if (refreshListBtn) {
+                refreshListBtn.addEventListener('click', () => {
+                    if (currentUser) loadTradeList(currentUser.uid);
+                });
+            }
+
+            if (currentUser) loadTradeList(currentUser.uid);
+        }
+
+        // ================================================================
+        // GLOBAL FONKSİYONLAR
+        // ================================================================
+
+        async function listenForTrade(userId) {
+            if (unsubscribeTrade) { unsubscribeTrade();
+                unsubscribeTrade = null; }
+            try {
+                const qCreator = query(collection(db, "trades"),
+                    where("creatorId", "==", userId),
+                    where("status", "in", ["waiting_partner", "waiting_codes"])
+                );
+                const snapCreator = await getDocs(qCreator);
+                if (!snapCreator.empty) {
+                    const docSnap = snapCreator.docs[0];
+                    currentTradeId = docSnap.id;
+                    currentTradeData = docSnap.data();
+                    // Takas sayfasını güncelle
+                    if (currentPage === 'takas') {
+                        // Takas sayfası init içinde setup yapılıyor
+                    }
+                    unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                        if (doc.exists()) {
+                            currentTradeData = doc.data();
+                            if (currentPage === 'takas') {
+                                // Takas sayfasını güncelle
+                            }
+                            if (currentPage === 'takasekrani') {
+                                if (typeof window.initTakasEkrani === 'function') {
+                                    window.initTakasEkrani(currentTradeId, currentTradeData);
+                                }
+                            }
+                            // Menu'yu güncelle
+                            if (currentPage === 'menu') {
+                                loadTradeList(currentUser.uid);
+                            }
+                        } else {
+                            resetUI();
+                            showToast('Takas sonlandırıldı.', 'warning');
+                        }
+                    });
+                    return;
+                }
+                const qPartner = query(collection(db, "trades"),
+                    where("partnerId", "==", userId),
+                    where("status", "in", ["waiting_codes"])
+                );
+                const snapPartner = await getDocs(qPartner);
+                if (!snapPartner.empty) {
+                    const docSnap = snapPartner.docs[0];
+                    currentTradeId = docSnap.id;
+                    currentTradeData = docSnap.data();
+                    unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                        if (doc.exists()) {
+                            currentTradeData = doc.data();
+                            if (currentPage === 'takas') {}
+                            if (currentPage === 'takasekrani') {
+                                if (typeof window.initTakasEkrani === 'function') {
+                                    window.initTakasEkrani(currentTradeId, currentTradeData);
+                                }
+                            }
+                            if (currentPage === 'menu') {
+                                loadTradeList(currentUser.uid);
+                            }
+                        } else {
+                            resetUI();
+                            showToast('Takas sonlandırıldı.', 'warning');
+                        }
+                    });
+                    return;
+                }
+                resetUI();
+            } catch (error) {
+                console.error('ListenForTrade error:', error);
+                showToast('Takas durumu alınamadı: ' + error.message, 'error');
+            }
+        }
+
+        function resetUI() {
+            currentTradeId = null;
+            currentTradeData = null;
+            if (unsubscribeTrade) {
+                unsubscribeTrade();
+                unsubscribeTrade = null;
+            }
+            localStorage.removeItem('valotakas_trade');
+        }
+
+        // ================================================================
+        // AUTH STATE
+        // ================================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loginSection.style.display = 'none';
+                // localStorage kontrol et
+                const savedTrade = localStorage.getItem('valotakas_trade');
+                if (savedTrade) {
+                    try {
+                        const parsed = JSON.parse(savedTrade);
+                        currentTradeId = parsed.tradeId;
+                        currentTradeData = parsed.data;
+                    } catch {}
+                }
+                // Varsayılan sayfayı göster
+                showPage('takas');
+                // Aktif trade varsa dinle
+                if (currentUser) {
+                    await listenForTrade(currentUser.uid);
+                }
+                // URL'de tradeId varsa
+                const params = new URLSearchParams(window.location.search);
+                const urlTradeId = params.get('tradeId');
+                if (urlTradeId && currentUser) {
+                    // Manuel katılma işlemi
+                    try {
+                        const docRef = doc(db, "trades", urlTradeId);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            if (data.creatorId !== currentUser.uid && !data.partnerId) {
+                                currentTradeId = urlTradeId;
+                                currentTradeData = data;
+                                showPage('takasekrani');
+                                setTimeout(() => {
+                                    if (typeof window.initTakasEkrani === 'function') {
+                                        window.initTakasEkrani(urlTradeId, data);
+                                    }
+                                }, 100);
+                            }
+                        }
+                    } catch {}
+                }
+            } else {
+                currentUser = null;
+                loginSection.style.display = 'block';
+                document.querySelectorAll('.page-container').forEach(el => el.classList.remove('active'));
+                pageLoader.style.display = 'none';
+                resetUI();
+            }
+        });
+
+        loginBtn.addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                showToast('Hoş geldin, ' + result.user.displayName + '!', 'success');
+            } catch (error) {
+                if (error.code === 'auth/popup-blocked') {
+                    showToast('Popup engellendi! Lütfen popup engelini kaldırın.', 'error');
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    showToast('Alan adı yetkili değil! Firebase konsoluna bu domaini ekleyin.', 'error');
+                } else if (error.code !== 'auth/cancelled-popup-request') {
+                    showToast('Giriş başarısız: ' + error.message, 'error');
+                }
+            }
+        });
+
+        console.log('🚀 ValoTakas v13.0 loaded');
+    </script>
+</body>
+</html>
