@@ -409,111 +409,64 @@
             display: block;
         }
 
-        /* ---- Trade List ---- */
-        .trade-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .trade-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .trade-list::-webkit-scrollbar-track {
-            background: var(--valorant-dark);
-            border-radius: 4px;
-        }
-        .trade-list::-webkit-scrollbar-thumb {
-            background: var(--valorant-red);
-            border-radius: 4px;
-        }
-
-        .trade-item {
-            background: var(--valorant-dark);
-            padding: 14px 18px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--valorant-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-            animation: slideItem 0.3s ease;
-        }
-
-        @keyframes slideItem {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .trade-item:hover {
-            border-color: var(--valorant-border-light);
-            transform: translateX(4px);
-        }
-
-        .trade-item .info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .trade-item .info .title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .trade-item .info .sub {
-            font-size: 12px;
-            color: var(--valorant-muted);
-        }
-
-        .trade-item .status-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 12px;
-            border-radius: var(--radius-full);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .trade-item .status-badge.waiting {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--valorant-warning);
-        }
-
-        .trade-item .status-badge.active {
-            background: rgba(0, 212, 170, 0.15);
-            color: var(--valorant-success);
-        }
-
-        .trade-item .status-badge.completed {
-            background: rgba(0, 212, 170, 0.2);
-            color: var(--valorant-success);
-        }
-
-        .trade-item .delete-btn {
-            background: transparent;
+        /* ---- Animasyonlu Takas Aç Butonu ---- */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
             border: none;
-            color: var(--valorant-muted);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 17px 0;
+            border-radius: var(--radius-full);
             cursor: pointer;
             transition: var(--transition);
-            padding: 6px 10px;
-            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 12px;
+            animation: btnPulse 2s ease-in-out infinite;
         }
 
-        .trade-item .delete-btn:hover {
-            color: var(--valorant-red);
-            background: rgba(255, 70, 85, 0.1);
-            transform: scale(1.1);
+        @keyframes btnPulse {
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
+            }
+            50% {
+                box-shadow: 0 4px 40px rgba(255, 70, 85, 0.6);
+            }
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.06) 100%);
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 40px rgba(255, 70, 85, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary .icon {
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover .icon {
+            transform: rotate(90deg);
         }
 
         /* ---- Trade Form ---- */
@@ -681,6 +634,150 @@
             box-shadow: 0 4px 20px rgba(0, 212, 170, 0.35);
         }
 
+        /* ---- Status Box ---- */
+        .status-box {
+            background: linear-gradient(135deg, var(--valorant-dark), #141e28);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-top: 16px;
+            border-left: 4px solid var(--valorant-red);
+            display: none;
+            border: 1px solid var(--valorant-border);
+            border-left-width: 4px;
+        }
+
+        .status-box.active {
+            display: block;
+            animation: fadeSlideIn 0.3s ease;
+        }
+
+        .status-box .title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-box .title i {
+            color: var(--valorant-red);
+        }
+
+        .status-box .desc {
+            font-size: 13px;
+            color: var(--valorant-muted);
+            line-height: 1.6;
+        }
+
+        /* ---- Trade List ---- */
+        .trade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .trade-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .trade-list::-webkit-scrollbar-track {
+            background: var(--valorant-dark);
+            border-radius: 4px;
+        }
+        .trade-list::-webkit-scrollbar-thumb {
+            background: var(--valorant-red);
+            border-radius: 4px;
+        }
+
+        .trade-item {
+            background: var(--valorant-dark);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--valorant-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            animation: slideItem 0.3s ease;
+        }
+
+        @keyframes slideItem {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .trade-item:hover {
+            border-color: var(--valorant-border-light);
+            transform: translateX(4px);
+        }
+
+        .trade-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .trade-item .info .title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .trade-item .info .sub {
+            font-size: 12px;
+            color: var(--valorant-muted);
+        }
+
+        .trade-item .status-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .trade-item .status-badge.waiting {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--valorant-warning);
+        }
+
+        .trade-item .status-badge.active {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--valorant-success);
+        }
+
+        .trade-item .status-badge.completed {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--valorant-success);
+        }
+
+        .trade-item .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--valorant-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+        }
+
+        .trade-item .delete-btn:hover {
+            color: var(--valorant-red);
+            background: rgba(255, 70, 85, 0.1);
+            transform: scale(1.1);
+        }
+
         /* ---- Trade Screen (Partner Join) ---- */
         .trade-screen {
             display: none;
@@ -827,43 +924,6 @@
         .trade-screen .partner-form .btn-join:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 28px rgba(255, 70, 85, 0.4);
-        }
-
-        /* ---- Status Box ---- */
-        .status-box {
-            background: linear-gradient(135deg, var(--valorant-dark), #141e28);
-            border-radius: var(--radius-md);
-            padding: 18px 20px;
-            margin-top: 16px;
-            border-left: 4px solid var(--valorant-red);
-            display: none;
-            border: 1px solid var(--valorant-border);
-            border-left-width: 4px;
-        }
-
-        .status-box.active {
-            display: block;
-            animation: fadeSlideIn 0.3s ease;
-        }
-
-        .status-box .title {
-            font-weight: 700;
-            font-size: 14px;
-            color: #fff;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-box .title i {
-            color: var(--valorant-red);
-        }
-
-        .status-box .desc {
-            font-size: 13px;
-            color: var(--valorant-muted);
-            line-height: 1.6;
         }
 
         /* ---- Code Section ---- */
@@ -1231,8 +1291,11 @@
             <!-- Tab: Takas -->
             <div id="tab-trade" class="tab-content active">
 
-                <button id="openTradeBtn" class="btn-primary" style="width:100%; margin-bottom:12px;">
-                    <i class="fas fa-plus-circle"></i> Yeni Takas Aç
+                <!-- Animasyonlu Takas Aç Butonu -->
+                <button id="openTradeBtn" class="btn-primary">
+                    <span class="icon"><i class="fas fa-plus-circle"></i></span>
+                    Yeni Takas Aç
+                    <span style="font-size:12px; opacity:0.6; font-weight:400;">⚡</span>
                 </button>
 
                 <!-- Trade Form -->
@@ -1288,7 +1351,7 @@
             <div id="tab-list" class="tab-content">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <span style="font-weight:600; color:var(--valorant-muted); font-size:13px;">Aktif Takasların</span>
-                    <button id="refreshListBtn" class="btn-secondary" style="padding:6px 16px; font-size:12px;">
+                    <button id="refreshListBtn" class="btn-secondary" style="padding:6px 16px; font-size:12px; background:var(--valorant-dark); border:1px solid var(--valorant-border); color:var(--valorant-muted); border-radius:var(--radius-full); cursor:pointer; transition:var(--transition);">
                         <i class="fas fa-sync-alt"></i> Yenile
                     </button>
                 </div>
@@ -2183,9 +2246,8 @@
             const params = new URLSearchParams(window.location.search);
             if (params.get('tradeId')) {
                 console.log('🔗 Trade ID from URL:', params.get('tradeId'));
-                // Eğer kullanıcı zaten giriş yapmışsa handlePartnerJoin çağrılacak
             }
-            console.log('🚀 ValoTakas v4.0 loaded');
+            console.log('🚀 ValoTakas v5.0 loaded');
         });
 
         // ---- Global Error ----
