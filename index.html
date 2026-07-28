@@ -21,7 +21,6 @@
         :root {
             --valorant-red: #ff4655;
             --valorant-red-dark: #cc3344;
-            --valorant-red-glow: rgba(255, 70, 85, 0.4);
             --valorant-dark: #0f1923;
             --valorant-card: #1a2a3a;
             --valorant-card-hover: #223544;
@@ -205,14 +204,6 @@
             overflow: hidden;
         }
 
-        .login-box .google-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255, 70, 85, 0.04) 100%);
-            pointer-events: none;
-        }
-
         .login-box .google-btn:hover {
             background: #f8f9fa;
             border-color: var(--valorant-red);
@@ -289,10 +280,6 @@
             transition: var(--transition);
         }
 
-        .user-bar:hover {
-            border-color: var(--valorant-border-light);
-        }
-
         .user-bar img {
             width: 44px;
             height: 44px;
@@ -302,11 +289,6 @@
             flex-shrink: 0;
             box-shadow: 0 0 20px rgba(255, 70, 85, 0.15);
             transition: var(--transition);
-        }
-
-        .user-bar img:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 30px rgba(255, 70, 85, 0.3);
         }
 
         .user-bar .user-details {
@@ -434,14 +416,6 @@
             50% {
                 box-shadow: 0 4px 48px rgba(255, 70, 85, 0.55);
             }
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.06) 100%);
-            pointer-events: none;
         }
 
         .btn-primary:hover {
@@ -576,7 +550,7 @@
             color: #fff;
         }
 
-        /* ===== LINK BOX - GELİŞTİRİLDİ ===== */
+        /* ===== LINK BOX ===== */
         .link-box {
             display: none;
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
@@ -1354,7 +1328,7 @@
                     <button id="cancelTradeBtn" class="btn-cancel">İptal</button>
                 </div>
 
-                <!-- ===== LINK BOX - YENİ TASARIM ===== -->
+                <!-- ===== LINK BOX ===== -->
                 <div id="linkBox" class="link-box">
                     <div class="link-header">
                         <span class="link-label"><i class="fas fa-link"></i> Takas Linkin</span>
@@ -1648,16 +1622,11 @@
         }
 
         // ================================================================
-        // LİNK OLUŞTURMA - GARANTİLİ ÇALIŞIR
+        // LİNK OLUŞTURMA - EN BASİT VE GARANTİLİ
         // ================================================================
         function getTradeLink(tradeId) {
-            const currentUrl = window.location.href;
-            const baseUrl = currentUrl.split('?')[0];
-            // URL'deki son /'den sonrasını al
-            const parts = baseUrl.split('/');
-            const baseName = parts[parts.length - 1] || 'valotakas';
-            // Benzersiz link oluştur
-            const link = `https://valotakasofficial/takas${tradeId.slice(-6)}.vercel.app/`;
+            // En basit link formatı
+            const link = `https://valotakasofficial.vercel.app/?tradeId=${tradeId}`;
             console.log('🔗 Oluşturulan link:', link);
             return link;
         }
@@ -1840,6 +1809,7 @@
                 statusBox.classList.add('active');
                 statusDesc.textContent = 'Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.';
                 console.log('✅ Link başarıyla oluşturuldu:', link);
+                showToast('✅ Takas oluşturuldu! Linki kopyalayın.', 'success');
                 return;
             }
 
@@ -1989,7 +1959,6 @@
                 await setDoc(docRef, tradeData);
                 currentTradeId = docRef.id;
                 currentTradeData = tradeData;
-                showToast('✅ Takas oluşturuldu! Linki kopyalayın.', 'success');
                 await listenForTrade(currentUser.uid);
                 loadTradeList(currentUser.uid);
                 return true;
@@ -2348,10 +2317,14 @@
         // INIT
         // ================================================================
         window.addEventListener('load', () => {
-            console.log('🚀 ValoTakas v10.0 loaded');
+            console.log('🚀 ValoTakas v11.0 loaded');
             const params = new URLSearchParams(window.location.search);
             if (params.get('tradeId')) {
                 console.log('🔗 Trade ID from URL:', params.get('tradeId'));
+                // URL'den tradeId geldiyse, partner join işlemini başlat
+                if (currentUser) {
+                    handlePartnerJoin();
+                }
             }
         });
 
