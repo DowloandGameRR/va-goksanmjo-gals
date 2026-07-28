@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ValoTakas · Valorant Takas Platformu</title>
 
-    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <style>
@@ -26,7 +25,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            margin: 0;
         }
 
         .container {
@@ -37,10 +35,9 @@
             padding: 32px 28px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 70, 85, 0.15);
-            transition: 0.3s;
         }
 
-        /* ---------- LOGIN SECTION ---------- */
+        /* LOGIN */
         .login-box {
             background: #ffffff;
             border-radius: 28px;
@@ -85,19 +82,12 @@
             color: #1a1a1a;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .login-box .google-btn:hover {
             background: #f8f9fa;
             border-color: #b3b7bd;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             transform: scale(1.01);
-        }
-
-        .login-box .google-btn img {
-            width: 22px;
-            height: 22px;
         }
 
         .login-box .google-btn i {
@@ -130,7 +120,7 @@
             color: #ff4655;
         }
 
-        /* ---------- APP SECTION ---------- */
+        /* APP */
         .app-section {
             display: none;
         }
@@ -139,7 +129,6 @@
             display: block;
         }
 
-        /* User Bar */
         .user-bar {
             display: flex;
             align-items: center;
@@ -167,7 +156,6 @@
             font-weight: 700;
             font-size: 15px;
             color: #fff;
-            line-height: 1.2;
         }
 
         .user-bar .user-details .email {
@@ -192,7 +180,6 @@
             color: #fff;
         }
 
-        /* Trade Buttons */
         .action-grid {
             display: flex;
             flex-direction: column;
@@ -220,7 +207,6 @@
         .btn-primary:hover {
             background: #ff5f6d;
             transform: scale(1.01);
-            box-shadow: 0 6px 20px rgba(255, 70, 85, 0.35);
         }
 
         .btn-secondary {
@@ -241,7 +227,6 @@
             color: #fff;
         }
 
-        /* Trade Form */
         .trade-form {
             display: none;
             flex-direction: column;
@@ -261,7 +246,6 @@
             font-size: 13px;
             font-weight: 600;
             color: #b0c0d0;
-            letter-spacing: 0.3px;
         }
 
         .trade-form input {
@@ -272,7 +256,6 @@
             color: #fff;
             font-size: 14px;
             outline: none;
-            transition: 0.2s;
         }
 
         .trade-form input:focus {
@@ -289,14 +272,13 @@
             border-radius: 40px;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 4px;
         }
 
         .trade-form .btn-confirm:hover {
             background: #ff5f6d;
         }
 
-        /* Link Box */
+        /* LINK BOX - DÜZELTİLDİ */
         .link-box {
             display: none;
             background: #0f1923;
@@ -306,6 +288,7 @@
             border: 1px solid #2a3a4a;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .link-box.active {
@@ -314,6 +297,7 @@
 
         .link-box input {
             flex: 1;
+            min-width: 150px;
             background: #1a2a3a;
             border: 1px solid #2a3a4a;
             border-radius: 40px;
@@ -324,23 +308,30 @@
         }
 
         .link-box .copy-btn {
-            background: #2a3a4a;
+            background: #ff4655;
             border: none;
             color: #fff;
-            padding: 8px 18px;
+            padding: 10px 20px;
             border-radius: 40px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 13px;
             cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             white-space: nowrap;
         }
 
         .link-box .copy-btn:hover {
-            background: #3a4a5a;
+            background: #ff5f6d;
+            transform: scale(1.02);
         }
 
-        /* Status / Info */
+        .link-box .copy-btn.copied {
+            background: #00d4aa;
+        }
+
         .status-box {
             background: #0f1923;
             border-radius: 16px;
@@ -412,29 +403,51 @@
 
         .footer-text i {
             color: #ff4655;
-            margin: 0 4px;
         }
 
-        /* Hide */
-        .hidden {
-            display: none !important;
+        /* Toast bildirimi */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f1923;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 40px;
+            border: 1px solid #ff4655;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none;
+            animation: fadeInUp 0.3s ease;
         }
 
-        /* Responsive */
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            border-color: #00d4aa;
+        }
+
+        .toast.error {
+            border-color: #ff4655;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
         @media (max-width: 480px) {
-            .container {
-                padding: 20px 16px;
-            }
-            .login-box {
-                padding: 28px 20px;
-            }
-            .user-bar {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .user-bar .logout-btn {
-                margin-left: auto;
-            }
+            .container { padding: 20px 16px; }
+            .login-box { padding: 28px 20px; }
+            .user-bar { flex-wrap: wrap; gap: 10px; }
+            .user-bar .logout-btn { margin-left: auto; }
+            .link-box input { min-width: 120px; }
+            .link-box .copy-btn { padding: 8px 14px; font-size: 12px; }
         }
     </style>
 </head>
@@ -442,28 +455,21 @@
 
 <div class="container" id="appContainer">
 
-    <!-- ========== LOGIN SECTION ========== -->
+    <!-- LOGIN -->
     <div id="loginSection" class="login-box">
         <div class="logo-icon"><i class="fas fa-crosshairs"></i></div>
         <h1>ValoTakas</h1>
         <p class="subtitle">Valorant Takas Platformu</p>
-
         <button id="loginBtn" class="google-btn">
-            <i class="fab fa-google"></i>
-            Google ile Giriş Yap
+            <i class="fab fa-google"></i> Google ile Giriş Yap
         </button>
-
         <div class="divider"><span>güvenli & hızlı</span></div>
-        <p class="footer-note">
-            <i class="fas fa-shield-alt"></i>
-            Firebase Authentication ile korunur
-        </p>
+        <p class="footer-note"><i class="fas fa-shield-alt"></i> Firebase Authentication ile korunur</p>
     </div>
 
-    <!-- ========== APP SECTION ========== -->
+    <!-- APP -->
     <div id="appSection" class="app-section">
 
-        <!-- User Bar -->
         <div class="user-bar">
             <img id="userPhoto" src="https://via.placeholder.com/44" alt="profil" />
             <div class="user-details">
@@ -473,7 +479,6 @@
             <button id="logoutBtn" class="logout-btn">Çıkış</button>
         </div>
 
-        <!-- Action Buttons -->
         <div class="action-grid">
             <button id="openTradeBtn" class="btn-primary">
                 <i class="fas fa-plus-circle"></i> Takas Aç
@@ -483,33 +488,33 @@
             </button>
         </div>
 
-        <!-- Trade Form (gizli) -->
+        <!-- Trade Form -->
         <div id="tradeForm" class="trade-form">
             <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
             <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" />
-
             <label><i class="fas fa-lock"></i> Valorant Şifre</label>
             <input type="password" id="tradePassword" placeholder="Şifreniz" />
-
             <button id="confirmTradeBtn" class="btn-confirm">
-                <i class="fas fa-check-circle"></i> Takası Oluştur
+                <i class="fas fa-check-circle"></i> Takas Oluştur
             </button>
             <button id="cancelTradeBtn" class="btn-secondary" style="margin-top:4px;">İptal</button>
         </div>
 
-        <!-- Link Box (gizli) -->
+        <!-- Link Box - DÜZELTİLDİ -->
         <div id="linkBox" class="link-box">
             <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
-            <button id="copyLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> Kopyala</button>
+            <button id="copyLinkBtn" class="copy-btn">
+                <i class="fas fa-copy"></i> Kopyala
+            </button>
         </div>
 
-        <!-- Status Box (aktif takas varsa) -->
+        <!-- Status -->
         <div id="statusBox" class="status-box">
             <div class="title"><i class="fas fa-exchange-alt" style="color:#ff4655;"></i> Aktif Takas</div>
             <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
         </div>
 
-        <!-- Kod Bölümü (gizli) -->
+        <!-- Code Section -->
         <div id="codeSection" style="display:none; margin-top:16px;">
             <div style="background:#0f1923; padding:16px; border-radius:16px; border:1px solid #2a3a4a;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -530,21 +535,21 @@
 
         <div class="footer-text">
             <i class="fas fa-crosshairs"></i> ValoTakas · Valorant Takas Platformu
-            <br />
-            <span style="color:#3a4a5a;">© 2026 · Güvenli ve hızlı</span>
+            <br /><span style="color:#3a4a5a;">© 2026 · Güvenli ve hızlı</span>
         </div>
     </div>
 </div>
 
-<!-- ========== FIREBASE MODULE ========== -->
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- FIREBASE -->
 <script type="module">
-    // ----- Firebase Imports -----
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-    // ----- Config -----
     const firebaseConfig = {
         apiKey: "AIzaSyCRIlZJQkQhAx87I9W4EdGrSsWPNYZF5zU",
         authDomain: "valotakasofficial.firebaseapp.com",
@@ -561,7 +566,7 @@
     const provider = new GoogleAuthProvider();
     const db = getFirestore(app);
 
-    // ----- DOM refs -----
+    // DOM
     const loginSection = document.getElementById('loginSection');
     const appSection = document.getElementById('appSection');
     const loginBtn = document.getElementById('loginBtn');
@@ -591,12 +596,22 @@
     const partnerCodeDisplay = document.getElementById('partnerCodeDisplay');
     const codeStatus = document.getElementById('codeStatus');
 
-    // ----- State -----
+    const toast = document.getElementById('toast');
+
+    // State
     let currentUser = null;
     let currentTradeId = null;
     let unsubscribeTrade = null;
 
-    // ----- UI Helpers -----
+    // Toast
+    function showToast(message, type = 'success') {
+        toast.textContent = message;
+        toast.className = 'toast show ' + type;
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    }
+
+    // UI Helpers
     function showLogin() {
         loginSection.style.display = 'block';
         appSection.classList.remove('active');
@@ -633,12 +648,19 @@
         return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    // ----- Listen for active trade -----
+    // ===== LİNK OLUŞTURMA =====
+    function getTradeLink(tradeId) {
+        // Kullanıcının şu anki adresini kullan
+        const currentUrl = window.location.href;
+        const baseUrl = currentUrl.split('?')[0]; // Query parametrelerini temizle
+        return baseUrl + '?tradeId=' + tradeId;
+    }
+
+    // ===== LİSTELE =====
     async function listenForTrade(userId) {
         if (unsubscribeTrade) unsubscribeTrade();
 
         try {
-            // Query as creator
             const qCreator = query(
                 collection(db, "trades"),
                 where("creatorId", "==", userId),
@@ -649,14 +671,12 @@
                 const docSnap = snapCreator.docs[0];
                 currentTradeId = docSnap.id;
                 setupTradeUI(docSnap.id, docSnap.data(), userId);
-                // Real-time listener
                 unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
                     if (doc.exists()) setupTradeUI(doc.id, doc.data(), userId);
                 });
                 return;
             }
 
-            // Query as partner
             const qPartner = query(
                 collection(db, "trades"),
                 where("partnerId", "==", userId),
@@ -673,11 +693,7 @@
                 return;
             }
 
-            // No active trade
             resetUI();
-            statusBox.classList.remove('active');
-            linkBox.classList.remove('active');
-            tradeForm.classList.remove('active');
         } catch (e) {
             console.error("Listen trade error:", e);
         }
@@ -691,9 +707,8 @@
         codeSection.style.display = 'none';
         partnerCodeBox.style.display = 'none';
 
-        // WAITING PARTNER (creator)
         if (data.status === 'waiting_partner' && data.creatorId === userId) {
-            const link = `${window.location.origin}?tradeId=${tradeId}`;
+            const link = getTradeLink(tradeId);
             tradeLinkInput.value = link;
             linkBox.classList.add('active');
             statusBox.classList.add('active');
@@ -701,13 +716,11 @@
             return;
         }
 
-        // WAITING CODES (both sides)
         if (data.status === 'waiting_codes') {
             codeSection.style.display = 'block';
             statusBox.classList.add('active');
             statusDesc.textContent = 'Kod doğrulama aşaması. Karşılıklı kodları girin.';
 
-            // Show my code
             if (data.creatorId === userId) {
                 myCodeDisplay.textContent = data.creatorCode || '------';
                 if (data.partnerCode) {
@@ -736,20 +749,18 @@
             return;
         }
 
-        // COMPLETED
         if (data.status === 'completed') {
-            alert('🎉 Takas başarıyla tamamlandı!');
+            showToast('🎉 Takas başarıyla tamamlandı!', 'success');
             resetUI();
             return;
         }
 
-        // Fallback
         resetUI();
     }
 
-    // ----- Open Trade -----
+    // ===== TAKAS AÇ =====
     openTradeBtn.addEventListener('click', () => {
-        if (!currentUser) return;
+        if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return; }
         tradeForm.classList.toggle('active');
         if (tradeForm.classList.contains('active')) {
             tradeUsername.value = '';
@@ -766,13 +777,12 @@
         const username = tradeUsername.value.trim();
         const password = tradePassword.value.trim();
         if (!username || !password) {
-            alert('Lütfen Valorant kullanıcı adı ve şifrenizi girin.');
+            showToast('Lütfen Valorant kullanıcı adı ve şifrenizi girin.', 'error');
             return;
         }
 
-        // Check if already has active trade
         if (currentTradeId) {
-            alert('Zaten aktif bir takasınız var.');
+            showToast('Zaten aktif bir takasınız var.', 'error');
             tradeForm.classList.remove('active');
             return;
         }
@@ -794,15 +804,15 @@
             await setDoc(docRef, tradeData);
             currentTradeId = docRef.id;
             tradeForm.classList.remove('active');
-            alert('✅ Takas oluşturuldu! Linki kopyalayıp karşı tarafa gönderin.');
+            showToast('✅ Takas oluşturuldu! Linki kopyalayın.', 'success');
             await listenForTrade(currentUser.uid);
         } catch (e) {
             console.error("Create trade error:", e);
-            alert('Takas oluşturulamadı: ' + e.message);
+            showToast('Takas oluşturulamadı: ' + e.message, 'error');
         }
     });
 
-    // ----- Partner Join via URL -----
+    // ===== PARTNER KATILIMI =====
     async function handlePartnerJoin() {
         const params = new URLSearchParams(window.location.search);
         const tradeId = params.get('tradeId');
@@ -812,24 +822,23 @@
             const docRef = doc(db, "trades", tradeId);
             const docSnap = await getDoc(docRef);
             if (!docSnap.exists()) {
-                alert('Geçersiz takas linki.');
+                showToast('Geçersiz takas linki.', 'error');
                 return;
             }
             const data = docSnap.data();
             if (data.creatorId === currentUser.uid) {
-                alert('Bu takas size ait.');
+                showToast('Bu takas size ait.', 'error');
                 return;
             }
             if (data.partnerId) {
-                alert('Bu takasa zaten bir partner katılmış.');
+                showToast('Bu takasa zaten bir partner katılmış.', 'error');
                 return;
             }
             if (data.status !== 'waiting_partner') {
-                alert('Bu takas artık geçerli değil.');
+                showToast('Bu takas artık geçerli değil.', 'error');
                 return;
             }
 
-            // Partner formunu göster
             const pUsername = prompt('Valorant kullanıcı adınızı girin:');
             if (!pUsername) return;
             const pPassword = prompt('Valorant şifrenizi girin:');
@@ -843,38 +852,52 @@
                 partnerCode: partnerCode,
                 status: 'waiting_codes'
             });
-            alert('✅ Partner bilgileri kaydedildi. Kod bölümü açılıyor...');
+            showToast('✅ Partner bilgileri kaydedildi.', 'success');
             await listenForTrade(currentUser.uid);
         } catch (e) {
             console.error("Partner join error:", e);
-            alert('Katılım başarısız: ' + e.message);
+            showToast('Katılım başarısız: ' + e.message, 'error');
         }
     }
 
-    // ----- Copy Link -----
-    copyLinkBtn.addEventListener('click', () => {
-        tradeLinkInput.select();
-        navigator.clipboard.writeText(tradeLinkInput.value).then(() => {
-            alert('Link kopyalandı!');
-        }).catch(() => {
-            alert('Linki manuel kopyalayın: ' + tradeLinkInput.value);
-        });
-    });
-
-    // ----- Refresh Status -----
-    refreshTradeBtn.addEventListener('click', () => {
-        if (currentUser) {
-            listenForTrade(currentUser.uid);
-            alert('Durum yenilendi.');
+    // ===== KOPYALA =====
+    copyLinkBtn.addEventListener('click', async () => {
+        const link = tradeLinkInput.value;
+        if (!link || link === 'Link oluşturuluyor...') {
+            showToast('Önce takas oluşturun!', 'error');
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(link);
+            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı!';
+            copyLinkBtn.classList.add('copied');
+            showToast('✅ Link kopyalandı!', 'success');
+            setTimeout(() => {
+                copyLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                copyLinkBtn.classList.remove('copied');
+            }, 3000);
+        } catch {
+            // Fallback
+            tradeLinkInput.select();
+            document.execCommand('copy');
+            showToast('✅ Link kopyalandı!', 'success');
         }
     });
 
-    // ----- Code Confirmation -----
+    // ===== REFRESH =====
+    refreshTradeBtn.addEventListener('click', () => {
+        if (currentUser) {
+            listenForTrade(currentUser.uid);
+            showToast('Durum yenilendi.', 'success');
+        }
+    });
+
+    // ===== KOD DOĞRULAMA =====
     confirmCodeBtn.addEventListener('click', async () => {
         if (!currentTradeId || !currentUser) return;
         const code = codeInput.value.trim();
         if (!code || code.length !== 6 || isNaN(code)) {
-            alert('Lütfen 6 haneli sayısal kodu girin.');
+            showToast('Lütfen 6 haneli sayısal kodu girin.', 'error');
             return;
         }
 
@@ -886,48 +909,45 @@
 
             if (data.creatorId === currentUser.uid) {
                 if (data.creatorCode !== code) {
-                    alert('❌ Yanlış kod!');
+                    showToast('❌ Yanlış kod!', 'error');
                     return;
                 }
                 await updateDoc(docRef, { creatorConfirmed: true });
-                alert('✅ Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
+                showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
             } else if (data.partnerId === currentUser.uid) {
                 if (data.partnerCode !== code) {
-                    alert('❌ Yanlış kod!');
+                    showToast('❌ Yanlış kod!', 'error');
                     return;
                 }
                 await updateDoc(docRef, { partnerConfirmed: true });
-                alert('✅ Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
+                showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
             }
 
-            // Check if both confirmed
             const updated = (await getDoc(docRef)).data();
             if (updated.creatorConfirmed && updated.partnerConfirmed) {
                 await updateDoc(docRef, { status: 'completed' });
-                alert('🎉 Takas başarıyla tamamlandı!');
-                // Show partner codes
+                showToast('🎉 Takas başarıyla tamamlandı!', 'success');
                 if (updated.creatorId === currentUser.uid) {
-                    alert('Partner kodunuz: ' + updated.partnerCode);
+                    showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
                 } else {
-                    alert('Partner kodunuz: ' + updated.creatorCode);
+                    showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
                 }
                 resetUI();
                 listenForTrade(currentUser.uid);
             }
         } catch (e) {
             console.error("Code confirm error:", e);
-            alert('Doğrulama hatası: ' + e.message);
+            showToast('Doğrulama hatası: ' + e.message, 'error');
         }
     });
 
-    // ----- Auth State -----
+    // ===== AUTH =====
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
             setUser(user);
             showApp();
             listenForTrade(user.uid);
-            // Check for partner join after auth
             handlePartnerJoin();
         } else {
             currentUser = null;
@@ -936,21 +956,5 @@
         }
     });
 
-    // ----- Login / Logout -----
     loginBtn.addEventListener('click', () => {
-        signInWithPopup(auth, provider).catch((error) => {
-            console.error("Login error:", error);
-            alert('Giriş başarısız: ' + error.message);
-        });
-    });
-
-    logoutBtn.addEventListener('click', () => {
-        signOut(auth).catch((error) => {
-            console.error("Logout error:", error);
-        });
-    });
-
-    console.log('🚀 ValoTakas uygulaması başlatıldı.');
-</script>
-</body>
-</html>
+        signInWithPopup(auth, provider).catch
