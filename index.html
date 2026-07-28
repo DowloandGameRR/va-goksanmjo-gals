@@ -1,312 +1,816 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valorant Takas</title>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valorant Takas · Nexa</title>
 
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCRIlZJQkQhAx87I9W4EdGrSsWPNYZF5zU",
-            authDomain: "valotakasofficial.firebaseapp.com",
-            projectId: "valotakasofficial",
-            storageBucket: "valotakasofficial.firebasestorage.app",
-            messagingSenderId: "1614560180",
-            appId: "1:1614560180:web:d03a7d64c9b229a8a010e1",
-            measurementId: "G-N09VJ4TZNE"
-        };
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const db = getFirestore(app);
-
-        // ---- DOM Elements ----
-        const loginSection = document.getElementById('login-section');
-        const appSection = document.getElementById('app-section');
-        const userInfo = document.getElementById('user-info');
-        const userName = document.getElementById('user-name');
-        const userEmail = document.getElementById('user-email');
-        const userPhoto = document.getElementById('user-photo');
-        const logoutBtn = document.getElementById('logout-btn');
-        const loginBtn = document.getElementById('login-btn');
-
-        // Takas işlemleri
-        const openTradeBtn = document.getElementById('open-trade-btn');
-        const tradeForm = document.getElementById('trade-form');
-        const tradeUsername = document.getElementById('trade-username');
-        const tradePassword = document.getElementById('trade-password');
-        const confirmTradeBtn = document.getElementById('confirm-trade-btn');
-        const tradeLinkDiv = document.getElementById('trade-link-div');
-        const tradeLinkInput = document.getElementById('trade-link-input');
-        const copyLinkBtn = document.getElementById('copy-link-btn');
-
-        const partnerSection = document.getElementById('partner-section');
-        const partnerTradeId = document.getElementById('partner-trade-id');
-        const partnerUsername = document.getElementById('partner-username');
-        const partnerPassword = document.getElementById('partner-password');
-        const confirmPartnerBtn = document.getElementById('confirm-partner-btn');
-
-        const codeSection = document.getElementById('code-section');
-        const codeInput = document.getElementById('code-input');
-        const confirmCodeBtn = document.getElementById('confirm-code-btn');
-        const partnerCodeSection = document.getElementById('partner-code-section');
-        const partnerCodeDisplay = document.getElementById('partner-code-display');
-        const myCodeDisplay = document.getElementById('my-code-display');
-
-        // ---- Auth State ----
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                loginSection.style.display = 'none';
-                appSection.style.display = 'block';
-                userInfo.style.display = 'flex';
-                userName.textContent = user.displayName || 'İsimsiz';
-                userEmail.textContent = user.email;
-                userPhoto.src = user.photoURL || 'https://via.placeholder.com/40';
-                // Start listening for user's trade data
-                listenForTrade(user.uid);
-            } else {
-                // User is signed out
-                loginSection.style.display = 'flex';
-                appSection.style.display = 'none';
-                userInfo.style.display = 'none';
-                // Reset UI
-                resetUI();
-            }
-        });
-
-        // ---- Login / Logout ----
-        loginBtn.addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch((error) => {
-                console.error("Login error:", error);
-                alert("Giriş başarısız: " + error.message);
-            });
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).catch((error) => {
-                console.error("Logout error:", error);
-            });
-        });
-
-        // ---- Trade Logic ----
-        let currentUser = null;
-        let currentTradeId = null;
-        let unsubscribeTrade = null;
-
-        function resetUI() {
-            tradeForm.style.display = 'none';
-            tradeLinkDiv.style.display = 'none';
-            partnerSection.style.display = 'none';
-            codeSection.style.display = 'none';
-            partnerCodeSection.style.display = 'none';
-            currentTradeId = null;
-            if (unsubscribeTrade) {
-                unsubscribeTrade();
-                unsubscribeTrade = null;
-            }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        function listenForTrade(userId) {
-            if (unsubscribeTrade) unsubscribeTrade();
-            // Query for active trade where user is creator or partner
-            const q = query(
+        body {
+            background: #0f1923;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: #1a2a3a;
+            border-radius: 32px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 70, 85, 0.15);
+            transition: 0.3s;
+        }
+
+        /* ---------- LOGIN SECTION ---------- */
+        .login-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-box .logo-icon {
+            font-size: 48px;
+            color: #ff4655;
+            margin-bottom: 8px;
+        }
+
+        .login-box h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f1923;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-box .subtitle {
+            color: #5b6f82;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 28px;
+        }
+
+        .login-box .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 0;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .login-box .google-btn:hover {
+            background: #f8f9fa;
+            border-color: #b3b7bd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transform: scale(1.01);
+        }
+
+        .login-box .google-btn img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .login-box .google-btn i {
+            font-size: 20px;
+            color: #4285f4;
+        }
+
+        .login-box .divider {
+            margin: 24px 0 16px;
+            border-top: 1px solid #e8eaed;
+            position: relative;
+        }
+
+        .login-box .divider span {
+            background: #fff;
+            padding: 0 12px;
+            position: relative;
+            top: -11px;
+            color: #7a8a9e;
+            font-size: 13px;
+        }
+
+        .login-box .footer-note {
+            color: #7a8a9e;
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        .login-box .footer-note a {
+            color: #ff4655;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ---------- APP SECTION ---------- */
+        .app-section {
+            display: none;
+        }
+
+        .app-section.active {
+            display: block;
+        }
+
+        /* User Bar */
+        .user-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #0f1923;
+            padding: 10px 16px;
+            border-radius: 60px;
+            margin-bottom: 28px;
+            border: 1px solid #2a3a4a;
+        }
+
+        .user-bar img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #ff4655;
+            object-fit: cover;
+        }
+
+        .user-bar .user-details {
+            flex: 1;
+        }
+
+        .user-bar .user-details .name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .user-bar .user-details .email {
+            font-size: 12px;
+            color: #8899aa;
+        }
+
+        .user-bar .logout-btn {
+            background: transparent;
+            border: 1px solid #ff4655;
+            color: #ff4655;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .user-bar .logout-btn:hover {
+            background: #ff4655;
+            color: #fff;
+        }
+
+        /* Trade Buttons */
+        .action-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            background: #ff4655;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 16px 0;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 70, 85, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #ff5f6d;
+            transform: scale(1.01);
+            box-shadow: 0 6px 20px rgba(255, 70, 85, 0.35);
+        }
+
+        .btn-secondary {
+            background: #2a3a4a;
+            border: none;
+            color: #c0d0e0;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 14px 0;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #3a4a5a;
+        }
+
+        .btn-secondary:hover {
+            background: #3a4a5a;
+            color: #fff;
+        }
+
+        /* Trade Form */
+        .trade-form {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            background: #0f1923;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 8px;
+            border: 1px solid #2a3a4a;
+        }
+
+        .trade-form.active {
+            display: flex;
+        }
+
+        .trade-form label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #b0c0d0;
+            letter-spacing: 0.3px;
+        }
+
+        .trade-form input {
+            background: #1a2a3a;
+            border: 1px solid #2a3a4a;
+            border-radius: 40px;
+            padding: 12px 18px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .trade-form input:focus {
+            border-color: #ff4655;
+            box-shadow: 0 0 0 3px rgba(255, 70, 85, 0.15);
+        }
+
+        .trade-form .btn-confirm {
+            background: #ff4655;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+        .trade-form .btn-confirm:hover {
+            background: #ff5f6d;
+        }
+
+        /* Link Box */
+        .link-box {
+            display: none;
+            background: #0f1923;
+            padding: 16px 18px;
+            border-radius: 20px;
+            margin-top: 12px;
+            border: 1px solid #2a3a4a;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .link-box.active {
+            display: flex;
+        }
+
+        .link-box input {
+            flex: 1;
+            background: #1a2a3a;
+            border: 1px solid #2a3a4a;
+            border-radius: 40px;
+            padding: 10px 14px;
+            color: #b0c0d0;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .link-box .copy-btn {
+            background: #2a3a4a;
+            border: none;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .link-box .copy-btn:hover {
+            background: #3a4a5a;
+        }
+
+        /* Status / Info */
+        .status-box {
+            background: #0f1923;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-top: 16px;
+            border-left: 4px solid #ff4655;
+            display: none;
+        }
+
+        .status-box.active {
+            display: block;
+        }
+
+        .status-box .title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .status-box .desc {
+            font-size: 13px;
+            color: #8899aa;
+        }
+
+        .code-display {
+            background: #1a2a3a;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 28px;
+            letter-spacing: 8px;
+            text-align: center;
+            border: 1px solid #ff4655;
+            color: #fff;
+            margin: 12px 0;
+            font-weight: 700;
+        }
+
+        .partner-code-box {
+            background: #0f1923;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-left: 3px solid #ff4655;
+            margin-top: 12px;
+        }
+
+        .partner-code-box .label {
+            font-size: 12px;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .partner-code-box .code {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 4px;
+        }
+
+        .footer-text {
+            margin-top: 28px;
+            font-size: 12px;
+            color: #5b6f82;
+            text-align: center;
+            border-top: 1px solid #1a2a3a;
+            padding-top: 18px;
+        }
+
+        .footer-text i {
+            color: #ff4655;
+            margin: 0 4px;
+        }
+
+        /* Hide */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .login-box {
+                padding: 28px 20px;
+            }
+            .user-bar {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .user-bar .logout-btn {
+                margin-left: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="appContainer">
+
+    <!-- ========== LOGIN SECTION ========== -->
+    <div id="loginSection" class="login-box">
+        <div class="logo-icon"><i class="fas fa-crosshairs"></i></div>
+        <h1>Nexa</h1>
+        <p class="subtitle">Valorant Takas Platformu</p>
+
+        <button id="loginBtn" class="google-btn">
+            <i class="fab fa-google"></i>
+            Google ile Giriş Yap
+        </button>
+
+        <div class="divider"><span>güvenli & hızlı</span></div>
+        <p class="footer-note">
+            <i class="fas fa-shield-alt" style="color:#ff4655;"></i>
+            Firebase Authentication ile korunur
+        </p>
+    </div>
+
+    <!-- ========== APP SECTION ========== -->
+    <div id="appSection" class="app-section">
+
+        <!-- User Bar -->
+        <div class="user-bar">
+            <img id="userPhoto" src="https://via.placeholder.com/44" alt="profil" />
+            <div class="user-details">
+                <div class="name" id="userName">Kullanıcı</div>
+                <div class="email" id="userEmail">email@example.com</div>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Çıkış</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-grid">
+            <button id="openTradeBtn" class="btn-primary">
+                <i class="fas fa-plus-circle"></i> Takas Aç
+            </button>
+            <button id="refreshTradeBtn" class="btn-secondary">
+                <i class="fas fa-sync-alt"></i> Durumu Kontrol Et
+            </button>
+        </div>
+
+        <!-- Trade Form (gizli) -->
+        <div id="tradeForm" class="trade-form">
+            <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
+            <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" />
+
+            <label><i class="fas fa-lock"></i> Valorant Şifre</label>
+            <input type="password" id="tradePassword" placeholder="Şifreniz" />
+
+            <button id="confirmTradeBtn" class="btn-confirm">
+                <i class="fas fa-check-circle"></i> Takası Oluştur
+            </button>
+            <button id="cancelTradeBtn" class="btn-secondary" style="margin-top:4px;">İptal</button>
+        </div>
+
+        <!-- Link Box (gizli) -->
+        <div id="linkBox" class="link-box">
+            <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
+            <button id="copyLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> Kopyala</button>
+        </div>
+
+        <!-- Status Box (aktif takas varsa) -->
+        <div id="statusBox" class="status-box">
+            <div class="title"><i class="fas fa-exchange-alt" style="color:#ff4655;"></i> Aktif Takas</div>
+            <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
+        </div>
+
+        <!-- Kod Bölümü (gizli) -->
+        <div id="codeSection" style="display:none; margin-top:16px;">
+            <div style="background:#0f1923; padding:16px; border-radius:16px; border:1px solid #2a3a4a;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:600; color:#b0c0d0;"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
+                    <span id="codeStatus" style="font-size:12px; color:#ff4655;">BEKLİYOR</span>
+                </div>
+                <div class="code-display" id="myCodeDisplay">------</div>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                    <input type="text" id="codeInput" placeholder="6 haneli kodu gir" maxlength="6" style="flex:1; background:#1a2a3a; border:1px solid #2a3a4a; border-radius:40px; padding:10px 16px; color:#fff; outline:none;" />
+                    <button id="confirmCodeBtn" class="btn-primary" style="padding:10px 24px; font-size:14px;">Doğrula</button>
+                </div>
+                <div id="partnerCodeBox" class="partner-code-box" style="display:none;">
+                    <div class="label">Partner Kodu</div>
+                    <div class="code" id="partnerCodeDisplay">------</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            <i class="fas fa-crosshairs"></i> Nexa · Valorant Takas · v1.0
+            <br />
+            <span style="color:#3a4a5a;">© 2026 · Güvenli ve hızlı</span>
+        </div>
+    </div>
+</div>
+
+<!-- ========== FIREBASE MODULE ========== -->
+<script type="module">
+    // ----- Firebase Imports -----
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+    // ----- Config -----
+    const firebaseConfig = {
+        apiKey: "AIzaSyCRIlZJQkQhAx87I9W4EdGrSsWPNYZF5zU",
+        authDomain: "valotakasofficial.firebaseapp.com",
+        projectId: "valotakasofficial",
+        storageBucket: "valotakasofficial.firebasestorage.app",
+        messagingSenderId: "1614560180",
+        appId: "1:1614560180:web:d03a7d64c9b229a8a010e1",
+        measurementId: "G-N09VJ4TZNE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const db = getFirestore(app);
+
+    // ----- DOM refs -----
+    const loginSection = document.getElementById('loginSection');
+    const appSection = document.getElementById('appSection');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userPhoto = document.getElementById('userPhoto');
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+
+    const openTradeBtn = document.getElementById('openTradeBtn');
+    const tradeForm = document.getElementById('tradeForm');
+    const tradeUsername = document.getElementById('tradeUsername');
+    const tradePassword = document.getElementById('tradePassword');
+    const confirmTradeBtn = document.getElementById('confirmTradeBtn');
+    const cancelTradeBtn = document.getElementById('cancelTradeBtn');
+    const linkBox = document.getElementById('linkBox');
+    const tradeLinkInput = document.getElementById('tradeLinkInput');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const statusBox = document.getElementById('statusBox');
+    const statusDesc = document.getElementById('statusDesc');
+    const refreshTradeBtn = document.getElementById('refreshTradeBtn');
+
+    const codeSection = document.getElementById('codeSection');
+    const myCodeDisplay = document.getElementById('myCodeDisplay');
+    const codeInput = document.getElementById('codeInput');
+    const confirmCodeBtn = document.getElementById('confirmCodeBtn');
+    const partnerCodeBox = document.getElementById('partnerCodeBox');
+    const partnerCodeDisplay = document.getElementById('partnerCodeDisplay');
+    const codeStatus = document.getElementById('codeStatus');
+
+    // ----- State -----
+    let currentUser = null;
+    let currentTradeId = null;
+    let unsubscribeTrade = null;
+
+    // ----- UI Helpers -----
+    function showLogin() {
+        loginSection.style.display = 'block';
+        appSection.classList.remove('active');
+        resetUI();
+    }
+
+    function showApp() {
+        loginSection.style.display = 'none';
+        appSection.classList.add('active');
+    }
+
+    function resetUI() {
+        tradeForm.classList.remove('active');
+        linkBox.classList.remove('active');
+        statusBox.classList.remove('active');
+        codeSection.style.display = 'none';
+        partnerCodeBox.style.display = 'none';
+        currentTradeId = null;
+        if (unsubscribeTrade) {
+            unsubscribeTrade();
+            unsubscribeTrade = null;
+        }
+    }
+
+    function setUser(user) {
+        if (user) {
+            userName.textContent = user.displayName || 'Valorant Oyuncusu';
+            userEmail.textContent = user.email;
+            userPhoto.src = user.photoURL || 'https://via.placeholder.com/44';
+        }
+    }
+
+    function generateCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // ----- Listen for active trade -----
+    async function listenForTrade(userId) {
+        if (unsubscribeTrade) unsubscribeTrade();
+
+        try {
+            // Query as creator
+            const qCreator = query(
                 collection(db, "trades"),
                 where("creatorId", "==", userId),
-                where("status", "in", ["waiting_partner", "waiting_codes", "completed"])
+                where("status", "in", ["waiting_partner", "waiting_codes"])
             );
-            // Also check where partnerId == userId
+            const snapCreator = await getDocs(qCreator);
+            if (!snapCreator.empty) {
+                const docSnap = snapCreator.docs[0];
+                currentTradeId = docSnap.id;
+                setupTradeUI(docSnap.id, docSnap.data(), userId);
+                // Real-time listener
+                unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                    if (doc.exists()) setupTradeUI(doc.id, doc.data(), userId);
+                });
+                return;
+            }
+
+            // Query as partner
             const qPartner = query(
                 collection(db, "trades"),
                 where("partnerId", "==", userId),
-                where("status", "in", ["waiting_codes", "completed"])
+                where("status", "in", ["waiting_codes"])
             );
-
-            // We need to listen to both queries, but for simplicity we'll use a single listener on the specific trade if known
-            // Instead, we'll listen for the trade using the currentTradeId if set, or query for the user's active trade.
-            // Better: onAuthStateChanged we can query and set.
-            // Let's implement a function to find active trade for user.
-            findActiveTrade(userId);
-        }
-
-        async function findActiveTrade(userId) {
-            try {
-                // Check as creator
-                const qCreator = query(
-                    collection(db, "trades"),
-                    where("creatorId", "==", userId),
-                    where("status", "in", ["waiting_partner", "waiting_codes"])
-                );
-                const snapCreator = await getDocs(qCreator);
-                if (!snapCreator.empty) {
-                    const doc = snapCreator.docs[0];
-                    const data = doc.data();
-                    currentTradeId = doc.id;
-                    setupTradeUI(doc.id, data, userId);
-                    return;
-                }
-
-                // Check as partner
-                const qPartner = query(
-                    collection(db, "trades"),
-                    where("partnerId", "==", userId),
-                    where("status", "in", ["waiting_codes"])
-                );
-                const snapPartner = await getDocs(qPartner);
-                if (!snapPartner.empty) {
-                    const doc = snapPartner.docs[0];
-                    const data = doc.data();
-                    currentTradeId = doc.id;
-                    setupTradeUI(doc.id, data, userId);
-                    return;
-                }
-
-                // No active trade
-                resetUI();
-                tradeForm.style.display = 'block';
-            } catch (error) {
-                console.error("Find active trade error:", error);
-            }
-        }
-
-        function setupTradeUI(tradeId, data, userId) {
-            currentTradeId = tradeId;
-            tradeForm.style.display = 'none';
-            tradeLinkDiv.style.display = 'none';
-            partnerSection.style.display = 'none';
-            codeSection.style.display = 'none';
-            partnerCodeSection.style.display = 'none';
-
-            if (data.status === 'waiting_partner' && data.creatorId === userId) {
-                // Show trade link to share
-                const link = `${window.location.origin}?tradeId=${tradeId}`;
-                tradeLinkInput.value = link;
-                tradeLinkDiv.style.display = 'block';
-            } else if (data.status === 'waiting_codes') {
-                // Both users are in this state, show code section
-                if (data.creatorId === userId) {
-                    // Show my code (creator's code)
-                    myCodeDisplay.textContent = data.creatorCode || 'Kod oluşturulmadı';
-                    // Show partner code section if partner has confirmed
-                    if (data.partnerCode) {
-                        partnerCodeDisplay.textContent = data.partnerCode;
-                        partnerCodeSection.style.display = 'block';
-                    } else {
-                        partnerCodeSection.style.display = 'none';
-                    }
-                    codeSection.style.display = 'block';
-                } else if (data.partnerId === userId) {
-                    // Partner: show code input to confirm
-                    partnerCodeDisplay.textContent = data.partnerCode || 'Kod oluşturulmadı';
-                    if (data.creatorCode) {
-                        myCodeDisplay.textContent = data.creatorCode;
-                        partnerCodeSection.style.display = 'block';
-                    } else {
-                        partnerCodeSection.style.display = 'none';
-                    }
-                    codeSection.style.display = 'block';
-                }
-            } else if (data.status === 'completed') {
-                // Trade completed
-                alert('Takas tamamlandı!');
-                resetUI();
-            }
-        }
-
-        // ---- Open Trade ----
-        openTradeBtn.addEventListener('click', () => {
-            if (!auth.currentUser) return;
-            const userId = auth.currentUser.uid;
-            const username = tradeUsername.value.trim();
-            const password = tradePassword.value.trim();
-            if (!username || !password) {
-                alert('Lütfen Valorant kullanıcı adı ve şifresini girin.');
-                return;
-            }
-
-            // Check if user already has an active trade
-            findActiveTrade(userId).then(() => {
-                if (currentTradeId) {
-                    alert('Zaten aktif bir takasınız var.');
-                    return;
-                }
-                // Create new trade
-                const tradeData = {
-                    creatorId: userId,
-                    creatorUsername: username,
-                    creatorPassword: password,
-                    creatorCode: generateCode(),
-                    partnerId: null,
-                    partnerUsername: '',
-                    partnerPassword: '',
-                    partnerCode: '',
-                    status: 'waiting_partner', // waiting_partner, waiting_codes, completed
-                    createdAt: new Date().toISOString()
-                };
-                const docRef = doc(collection(db, "trades"));
-                setDoc(docRef, tradeData).then(() => {
-                    currentTradeId = docRef.id;
-                    tradeForm.style.display = 'none';
-                    const link = `${window.location.origin}?tradeId=${docRef.id}`;
-                    tradeLinkInput.value = link;
-                    tradeLinkDiv.style.display = 'block';
-                    alert('Takas oluşturuldu! Linki kopyalayıp karşı tarafa gönderin.');
-                    // Listen for changes
-                    listenToTrade(docRef.id);
-                }).catch((error) => {
-                    console.error("Create trade error:", error);
-                    alert('Takas oluşturulamadı: ' + error.message);
+            const snapPartner = await getDocs(qPartner);
+            if (!snapPartner.empty) {
+                const docSnap = snapPartner.docs[0];
+                currentTradeId = docSnap.id;
+                setupTradeUI(docSnap.id, docSnap.data(), userId);
+                unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
+                    if (doc.exists()) setupTradeUI(doc.id, doc.data(), userId);
                 });
-            });
-        });
-
-        function listenToTrade(tradeId) {
-            if (unsubscribeTrade) unsubscribeTrade();
-            unsubscribeTrade = onSnapshot(doc(db, "trades", tradeId), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const userId = auth.currentUser?.uid;
-                    if (data.status === 'waiting_partner' && data.creatorId === userId) {
-                        // Still waiting
-                    } else if (data.status === 'waiting_codes') {
-                        // Show code section
-                        setupTradeUI(tradeId, data, userId);
-                    } else if (data.status === 'completed') {
-                        alert('Takas tamamlandı!');
-                        resetUI();
-                    }
-                } else {
-                    resetUI();
-                }
-            });
-        }
-
-        // ---- Partner Joins via Link ----
-        // Check URL for tradeId on load
-        window.addEventListener('load', () => {
-            const params = new URLSearchParams(window.location.search);
-            const tradeId = params.get('tradeId');
-            if (tradeId && auth.currentUser) {
-                joinTrade(tradeId);
-            }
-        });
-
-        async function joinTrade(tradeId) {
-            if (!auth.currentUser) {
-                alert('Önce giriş yapmalısınız.');
                 return;
             }
-            const userId = auth.currentUser.uid;
+
+            // No active trade
+            resetUI();
+            statusBox.classList.remove('active');
+            linkBox.classList.remove('active');
+            tradeForm.classList.remove('active');
+        } catch (e) {
+            console.error("Listen trade error:", e);
+        }
+    }
+
+    function setupTradeUI(tradeId, data, userId) {
+        currentTradeId = tradeId;
+        tradeForm.classList.remove('active');
+        linkBox.classList.remove('active');
+        statusBox.classList.remove('active');
+        codeSection.style.display = 'none';
+        partnerCodeBox.style.display = 'none';
+
+        // WAITING PARTNER (creator)
+        if (data.status === 'waiting_partner' && data.creatorId === userId) {
+            const link = `${window.location.origin}?tradeId=${tradeId}`;
+            tradeLinkInput.value = link;
+            linkBox.classList.add('active');
+            statusBox.classList.add('active');
+            statusDesc.textContent = 'Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.';
+            return;
+        }
+
+        // WAITING CODES (both sides)
+        if (data.status === 'waiting_codes') {
+            codeSection.style.display = 'block';
+            statusBox.classList.add('active');
+            statusDesc.textContent = 'Kod doğrulama aşaması. Karşılıklı kodları girin.';
+
+            // Show my code
+            if (data.creatorId === userId) {
+                myCodeDisplay.textContent = data.creatorCode || '------';
+                if (data.partnerCode) {
+                    partnerCodeDisplay.textContent = data.partnerCode;
+                    partnerCodeBox.style.display = 'block';
+                    codeStatus.textContent = 'PARTNER KODU GELDİ';
+                    codeStatus.style.color = '#00d4aa';
+                } else {
+                    partnerCodeBox.style.display = 'none';
+                    codeStatus.textContent = 'PARTNER BEKLENİYOR';
+                    codeStatus.style.color = '#ffaa00';
+                }
+            } else if (data.partnerId === userId) {
+                myCodeDisplay.textContent = data.partnerCode || '------';
+                if (data.creatorCode) {
+                    partnerCodeDisplay.textContent = data.creatorCode;
+                    partnerCodeBox.style.display = 'block';
+                    codeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
+                    codeStatus.style.color = '#00d4aa';
+                } else {
+                    partnerCodeBox.style.display = 'none';
+                    codeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
+                    codeStatus.style.color = '#ffaa00';
+                }
+            }
+            return;
+        }
+
+        // COMPLETED
+        if (data.status === 'completed') {
+            alert('🎉 Takas başarıyla tamamlandı!');
+            resetUI();
+            return;
+        }
+
+        // Fallback
+        resetUI();
+    }
+
+    // ----- Open Trade -----
+    openTradeBtn.addEventListener('click', () => {
+        if (!currentUser) return;
+        tradeForm.classList.toggle('active');
+        if (tradeForm.classList.contains('active')) {
+            tradeUsername.value = '';
+            tradePassword.value = '';
+        }
+    });
+
+    cancelTradeBtn.addEventListener('click', () => {
+        tradeForm.classList.remove('active');
+    });
+
+    confirmTradeBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+        const username = tradeUsername.value.trim();
+        const password = tradePassword.value.trim();
+        if (!username || !password) {
+            alert('Lütfen Valorant kullanıcı adı ve şifrenizi girin.');
+            return;
+        }
+
+        // Check if already has active trade
+        if (currentTradeId) {
+            alert('Zaten aktif bir takasınız var.');
+            tradeForm.classList.remove('active');
+            return;
+        }
+
+        try {
+            const tradeData = {
+                creatorId: currentUser.uid,
+                creatorUsername: username,
+                creatorPassword: password,
+                creatorCode: generateCode(),
+                partnerId: null,
+                partnerUsername: '',
+                partnerPassword: '',
+                partnerCode: '',
+                status: 'waiting_partner',
+                createdAt: new Date().toISOString()
+            };
+            const docRef = doc(collection(db, "trades"));
+            await setDoc(docRef, tradeData);
+            currentTradeId = docRef.id;
+            tradeForm.classList.remove('active');
+            alert('✅ Takas oluşturuldu! Linki kopyalayıp karşı tarafa gönderin.');
+            await listenForTrade(currentUser.uid);
+        } catch (e) {
+            console.error("Create trade error:", e);
+            alert('Takas oluşturulamadı: ' + e.message);
+        }
+    });
+
+    // ----- Partner Join via URL -----
+    async function handlePartnerJoin() {
+        const params = new URLSearchParams(window.location.search);
+        const tradeId = params.get('tradeId');
+        if (!tradeId || !currentUser) return;
+
+        try {
             const docRef = doc(db, "trades", tradeId);
             const docSnap = await getDoc(docRef);
             if (!docSnap.exists()) {
@@ -314,7 +818,7 @@
                 return;
             }
             const data = docSnap.data();
-            if (data.creatorId === userId) {
+            if (data.creatorId === currentUser.uid) {
                 alert('Bu takas size ait.');
                 return;
             }
@@ -327,208 +831,133 @@
                 return;
             }
 
-            // Show partner form
-            partnerSection.style.display = 'block';
-            partnerTradeId.value = tradeId;
-            // When partner confirms
-            confirmPartnerBtn.onclick = async () => {
-                const pUsername = partnerUsername.value.trim();
-                const pPassword = partnerPassword.value.trim();
-                if (!pUsername || !pPassword) {
-                    alert('Lütfen Valorant kullanıcı adı ve şifrenizi girin.');
-                    return;
-                }
-                const partnerCode = generateCode();
-                // Update trade
-                await updateDoc(docRef, {
-                    partnerId: userId,
-                    partnerUsername: pUsername,
-                    partnerPassword: pPassword,
-                    partnerCode: partnerCode,
-                    status: 'waiting_codes'
-                });
-                partnerSection.style.display = 'none';
-                alert('Partner bilgileri kaydedildi. Kod bölümü açılıyor...');
-                // Listen for trade
-                listenToTrade(tradeId);
-                // Show code section
-                const updatedData = (await getDoc(docRef)).data();
-                setupTradeUI(tradeId, updatedData, userId);
-            };
+            // Partner formunu göster
+            const pUsername = prompt('Valorant kullanıcı adınızı girin:');
+            if (!pUsername) return;
+            const pPassword = prompt('Valorant şifrenizi girin:');
+            if (!pPassword) return;
+
+            const partnerCode = generateCode();
+            await updateDoc(docRef, {
+                partnerId: currentUser.uid,
+                partnerUsername: pUsername,
+                partnerPassword: pPassword,
+                partnerCode: partnerCode,
+                status: 'waiting_codes'
+            });
+            alert('✅ Partner bilgileri kaydedildi. Kod bölümü açılıyor...');
+            await listenForTrade(currentUser.uid);
+        } catch (e) {
+            console.error("Partner join error:", e);
+            alert('Katılım başarısız: ' + e.message);
+        }
+    }
+
+    // ----- Copy Link -----
+    copyLinkBtn.addEventListener('click', () => {
+        tradeLinkInput.select();
+        navigator.clipboard.writeText(tradeLinkInput.value).then(() => {
+            alert('Link kopyalandı!');
+        }).catch(() => {
+            alert('Linki manuel kopyalayın: ' + tradeLinkInput.value);
+        });
+    });
+
+    // ----- Refresh Status -----
+    refreshTradeBtn.addEventListener('click', () => {
+        if (currentUser) {
+            listenForTrade(currentUser.uid);
+            alert('Durum yenilendi.');
+        }
+    });
+
+    // ----- Code Confirmation -----
+    confirmCodeBtn.addEventListener('click', async () => {
+        if (!currentTradeId || !currentUser) return;
+        const code = codeInput.value.trim();
+        if (!code || code.length !== 6 || isNaN(code)) {
+            alert('Lütfen 6 haneli sayısal kodu girin.');
+            return;
         }
 
-        // ---- Code Confirmation ----
-        confirmCodeBtn.addEventListener('click', async () => {
-            if (!currentTradeId || !auth.currentUser) return;
-            const userId = auth.currentUser.uid;
-            const code = codeInput.value.trim();
-            if (!code || code.length !== 6 || isNaN(code)) {
-                alert('Lütfen 6 haneli sayısal kodu girin.');
-                return;
-            }
-
+        try {
             const docRef = doc(db, "trades", currentTradeId);
             const docSnap = await getDoc(docRef);
             if (!docSnap.exists()) return;
             const data = docSnap.data();
 
-            // Check if user is creator or partner
-            if (data.creatorId === userId) {
+            if (data.creatorId === currentUser.uid) {
                 if (data.creatorCode !== code) {
-                    alert('Yanlış kod!');
+                    alert('❌ Yanlış kod!');
                     return;
                 }
-                // Mark creator confirmed
-                await updateDoc(docRef, {
-                    creatorConfirmed: true
-                });
-                alert('Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
-            } else if (data.partnerId === userId) {
+                await updateDoc(docRef, { creatorConfirmed: true });
+                alert('✅ Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
+            } else if (data.partnerId === currentUser.uid) {
                 if (data.partnerCode !== code) {
-                    alert('Yanlış kod!');
+                    alert('❌ Yanlış kod!');
                     return;
                 }
-                await updateDoc(docRef, {
-                    partnerConfirmed: true
-                });
-                alert('Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
+                await updateDoc(docRef, { partnerConfirmed: true });
+                alert('✅ Kod doğrulandı! Karşı tarafın onaylamasını bekleyin.');
             }
 
             // Check if both confirmed
             const updated = (await getDoc(docRef)).data();
             if (updated.creatorConfirmed && updated.partnerConfirmed) {
-                // Both confirmed, show partner code to each other
-                await updateDoc(docRef, {
-                    status: 'completed'
-                });
-                alert('Takas başarıyla tamamlandı!');
+                await updateDoc(docRef, { status: 'completed' });
+                alert('🎉 Takas başarıyla tamamlandı!');
                 // Show partner codes
-                if (data.creatorId === userId) {
-                    alert('Partner kodunuz: ' + data.partnerCode);
+                if (updated.creatorId === currentUser.uid) {
+                    alert('Partner kodunuz: ' + updated.partnerCode);
                 } else {
-                    alert('Partner kodunuz: ' + data.creatorCode);
+                    alert('Partner kodunuz: ' + updated.creatorCode);
                 }
                 resetUI();
+                listenForTrade(currentUser.uid);
             }
-        });
-
-        // ---- Copy Link ----
-        copyLinkBtn.addEventListener('click', () => {
-            tradeLinkInput.select();
-            navigator.clipboard.writeText(tradeLinkInput.value).then(() => {
-                alert('Link kopyalandı!');
-            }).catch(() => {
-                alert('Linki manuel olarak kopyalayın: ' + tradeLinkInput.value);
-            });
-        });
-
-        // ---- Helper ----
-        function generateCode() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
+        } catch (e) {
+            console.error("Code confirm error:", e);
+            alert('Doğrulama hatası: ' + e.message);
         }
+    });
 
-        // ---- Live listener for trade updates ----
-        // This is already handled by onSnapshot in listenToTrade.
+    // ----- Auth State -----
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            setUser(user);
+            showApp();
+            listenForTrade(user.uid);
+            // Check for partner join after auth
+            handlePartnerJoin();
+        } else {
+            currentUser = null;
+            showLogin();
+            resetUI();
+        }
+    });
 
-        // ---- CSS ----
-        const style = document.createElement('style');
-        style.textContent = `
-            * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-            body { background: #0f1923; color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; }
-            .container { background: #1a2a3a; padding: 30px; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-            .login-box { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-            .login-box h1 { color: #ff4655; font-size: 28px; }
-            .login-box button, .btn { background: #ff4655; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-            .login-box button:hover, .btn:hover { background: #ff6a78; transform: scale(1.02); }
-            .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; background: #0f1923; padding: 10px 16px; border-radius: 30px; }
-            .user-info img { width: 40px; height: 40px; border-radius: 50%; }
-            .user-info .details { flex: 1; }
-            .user-info .name { font-weight: bold; }
-            .user-info .email { font-size: 12px; color: #aaa; }
-            .user-info .logout { background: #ff4655; border: none; color: #fff; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; }
-            .section { display: none; }
-            .section.active { display: block; }
-            .trade-form { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
-            .trade-form input { padding: 10px; border-radius: 8px; border: 1px solid #2a3a4a; background: #0f1923; color: #fff; }
-            .trade-form input:focus { outline: 2px solid #ff4655; }
-            .link-box { display: flex; gap: 8px; margin-top: 12px; }
-            .link-box input { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #2a3a4a; background: #0f1923; color: #fff; }
-            .code-section { margin-top: 20px; }
-            .code-section .code-display { background: #0f1923; padding: 12px; border-radius: 8px; font-size: 24px; letter-spacing: 8px; text-align: center; border: 1px solid #ff4655; margin: 12px 0; }
-            .partner-code-section { margin-top: 16px; background: #0f1923; padding: 12px; border-radius: 8px; border-left: 4px solid #ff4655; }
-            .footer { margin-top: 20px; font-size: 12px; color: #888; text-align: center; }
-        `;
-        document.head.appendChild(style);
+    // ----- Login / Logout -----
+    loginBtn.addEventListener('click', () => {
+        signInWithPopup(auth, provider).catch((error) => {
+            console.error("Login error:", error);
+            alert('Giriş başarısız: ' + error.message);
+        });
+    });
 
-        console.log('Firebase initialized and app ready.');
-    </script>
-</head>
-<body>
-    <div class="container">
-        <!-- Login Section -->
-        <div id="login-section" class="login-box">
-            <h1>⚔️ VALORANT TAKAS</h1>
-            <p>Devam etmek için Google ile giriş yapın</p>
-            <button id="login-btn">Google ile Giriş Yap</button>
-        </div>
+    logoutBtn.addEventListener('click', () => {
+        signOut(auth).catch((error) => {
+            console.error("Logout error:", error);
+        });
+    });
 
-        <!-- Main App Section -->
-        <div id="app-section" style="display:none;">
-            <div id="user-info" style="display:none;" class="user-info">
-                <img id="user-photo" src="" alt="Profil">
-                <div class="details">
-                    <div class="name" id="user-name">İsim</div>
-                    <div class="email" id="user-email">email@example.com</div>
-                </div>
-                <button id="logout-btn" class="logout">Çıkış</button>
-            </div>
+    // ----- Initial: check URL for tradeId (if already logged in) -----
+    window.addEventListener('load', () => {
+        // If user already logged in, handlePartnerJoin will be called by onAuthStateChanged
+    });
 
-            <!-- Takas Aç -->
-            <div id="trade-form" class="trade-form">
-                <h2>Yeni Takas Aç</h2>
-                <input type="text" id="trade-username" placeholder="Valorant Kullanıcı Adı" required>
-                <input type="password" id="trade-password" placeholder="Valorant Şifre" required>
-                <button id="open-trade-btn" class="btn">Takas Aç</button>
-            </div>
-
-            <!-- Takas Linki -->
-            <div id="trade-link-div" style="display:none;">
-                <h3>Takas Linkiniz</h3>
-                <p>Bu linki takas yapacağınız kişiyle paylaşın:</p>
-                <div class="link-box">
-                    <input type="text" id="trade-link-input" readonly>
-                    <button id="copy-link-btn" class="btn">Kopyala</button>
-                </div>
-            </div>
-
-            <!-- Partner Katılım (Link ile gelen) -->
-            <div id="partner-section" style="display:none;">
-                <h3>Takasa Katıl</h3>
-                <div class="trade-form">
-                    <input type="hidden" id="partner-trade-id">
-                    <input type="text" id="partner-username" placeholder="Valorant Kullanıcı Adınız" required>
-                    <input type="password" id="partner-password" placeholder="Valorant Şifreniz" required>
-                    <button id="confirm-partner-btn" class="btn">Katıl ve Onayla</button>
-                </div>
-            </div>
-
-            <!-- Kod Doğrulama -->
-            <div id="code-section" style="display:none;" class="code-section">
-                <h3>Kod Doğrulama</h3>
-                <p>Size verilen 6 haneli kodu girin:</p>
-                <div class="code-display" id="my-code-display">------</div>
-                <div class="trade-form">
-                    <input type="text" id="code-input" placeholder="6 haneli kod" maxlength="6" required>
-                    <button id="confirm-code-btn" class="btn">Kodu Doğrula</button>
-                </div>
-                <div id="partner-code-section" style="display:none;" class="partner-code-section">
-                    <p><strong>Partner Kodunuz:</strong></p>
-                    <div class="code-display" id="partner-code-display">------</div>
-                </div>
-            </div>
-
-            <div class="footer">© 2026 Valorant Takas · Güvenli ve hızlı</div>
-        </div>
-    </div>
+    console.log('🚀 Nexa Valorant Takas uygulaması başlatıldı.');
+</script>
 </body>
 </html>
