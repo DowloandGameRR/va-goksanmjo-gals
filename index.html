@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ValoTakas · Valorant Takas Platformu</title>
+    <title>ValoTakas · Valorant Takas Platformu Pro</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
         * {
@@ -49,71 +49,20 @@
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 620px;
             background: var(--valorant-card);
             border-radius: 32px;
             padding: 36px 32px;
             box-shadow: var(--shadow-heavy);
-            border: 1px solid rgba(255, 70, 85, 0.10);
+            border: 1px solid rgba(255, 70, 85, 0.2);
             position: relative;
             overflow: hidden;
             animation: containerPulse 4s ease-in-out infinite;
         }
 
         @keyframes containerPulse {
-            0%,
-            100% {
-                border-color: rgba(255, 70, 85, 0.10);
-            }
-            50% {
-                border-color: rgba(255, 70, 85, 0.25);
-            }
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -60%;
-            left: -40%;
-            width: 180%;
-            height: 180%;
-            background: radial-gradient(circle at 30% 20%, rgba(255, 70, 85, 0.04) 0%, transparent 65%);
-            pointer-events: none;
-            animation: bgPulse 8s ease-in-out infinite;
-        }
-
-        @keyframes bgPulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-        }
-
-        .container::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--valorant-red), var(--valorant-red), transparent);
-            opacity: 0.4;
-            animation: lineGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes lineGlow {
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-            50% {
-                opacity: 0.8;
-            }
+            0%, 100% { border-color: rgba(255, 70, 85, 0.2); }
+            50% { border-color: rgba(255, 70, 85, 0.5); }
         }
 
         /* Login */
@@ -126,17 +75,6 @@
             position: relative;
             z-index: 1;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            animation: loginFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes loginFloat {
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-4px);
-            }
         }
 
         .login-box .logo-icon {
@@ -144,18 +82,7 @@
             color: var(--valorant-red);
             margin-bottom: 6px;
             display: block;
-            filter: drop-shadow(0 4px 16px rgba(255, 70, 85, 0.3));
-            animation: iconPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+            filter: drop-shadow(0 4px 16px rgba(255, 70, 85, 0.4));
         }
 
         .login-box h1 {
@@ -165,7 +92,6 @@
             background: linear-gradient(135deg, #0f1923 40%, var(--valorant-red) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .login-box .subtitle {
@@ -196,12 +122,7 @@
             background: #f8f9fa;
             border-color: var(--valorant-red);
             transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.15);
-        }
-
-        .login-box .google-btn i {
-            font-size: 22px;
-            color: #4285f4;
+            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.2);
         }
 
         .login-box .divider {
@@ -220,18 +141,7 @@
             font-weight: 500;
         }
 
-        .login-box .footer-note {
-            color: var(--valorant-muted-dark);
-            font-size: 13px;
-            margin-top: 18px;
-        }
-
-        .login-box .footer-note i {
-            color: var(--valorant-red);
-            margin-right: 6px;
-        }
-
-        /* App */
+        /* App Section */
         .app-section {
             display: none;
             position: relative;
@@ -244,14 +154,8 @@
         }
 
         @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* User Bar */
@@ -262,7 +166,7 @@
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
             padding: 10px 16px;
             border-radius: var(--radius-full);
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             border: 1px solid var(--valorant-border);
         }
 
@@ -272,14 +176,6 @@
             border-radius: 50%;
             border: 2px solid var(--valorant-red);
             object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: 0 0 20px rgba(255, 70, 85, 0.15);
-            transition: var(--transition);
-        }
-
-        .user-bar img:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 30px rgba(255, 70, 85, 0.3);
         }
 
         .user-bar .user-details {
@@ -291,36 +187,28 @@
             font-weight: 700;
             font-size: 15px;
             color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .user-bar .user-details .email {
             font-size: 12px;
             color: var(--valorant-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .user-bar .logout-btn {
             background: transparent;
             border: 1.5px solid var(--valorant-red);
             color: var(--valorant-red);
-            padding: 6px 20px;
+            padding: 6px 18px;
             border-radius: var(--radius-full);
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            flex-shrink: 0;
         }
 
         .user-bar .logout-btn:hover {
             background: var(--valorant-red);
             color: #fff;
-            box-shadow: 0 0 24px rgba(255, 70, 85, 0.3);
         }
 
         /* Tabs */
@@ -354,31 +242,25 @@
         .tab-btn.active {
             background: var(--valorant-red);
             color: #fff;
-            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.3);
-        }
-
-        .tab-btn:hover:not(.active) {
-            color: #fff;
-            background: var(--valorant-card-light);
+            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.4);
         }
 
         .tab-content {
             display: none;
-            animation: fadeSlideIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* Buttons */
+        /* Buttons & Controls */
         .btn-primary {
             background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
             border: none;
             color: #fff;
             font-weight: 700;
             font-size: 16px;
-            padding: 17px 0;
+            padding: 16px 0;
             border-radius: var(--radius-full);
             cursor: pointer;
             transition: var(--transition);
@@ -389,55 +271,13 @@
             gap: 12px;
             width: 100%;
             margin-bottom: 12px;
-            animation: btnPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes btnPulse {
-            0%,
-            100% {
-                box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
-            }
-            50% {
-                box-shadow: 0 4px 40px rgba(255, 70, 85, 0.6);
-            }
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 8px 40px rgba(255, 70, 85, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 70, 85, 0.5);
         }
 
-        .btn-primary .icon {
-            display: inline-block;
-            transition: var(--transition);
-        }
-
-        .btn-primary:hover .icon {
-            transform: rotate(90deg);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1.5px solid var(--valorant-border);
-            color: #c0d0e0;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 14px 0;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-secondary:hover {
-            background: var(--valorant-border);
-            color: #fff;
-        }
-
-        /* Trade Form */
         .trade-form {
             display: none;
             flex-direction: column;
@@ -463,11 +303,6 @@
             gap: 8px;
         }
 
-        .trade-form label i {
-            color: var(--valorant-red);
-            width: 16px;
-        }
-
         .trade-form input {
             background: var(--valorant-card);
             border: 1px solid var(--valorant-border);
@@ -481,32 +316,22 @@
 
         .trade-form input:focus {
             border-color: var(--valorant-red);
-            box-shadow: 0 0 0 4px rgba(255, 70, 85, 0.12);
+            box-shadow: 0 0 0 4px rgba(255, 70, 85, 0.15);
         }
 
-        .trade-form .btn-confirm {
+        .btn-confirm {
             background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
             border: none;
             color: #fff;
             font-weight: 700;
-            padding: 15px;
+            padding: 14px;
             border-radius: var(--radius-full);
             cursor: pointer;
             transition: var(--transition);
             margin-top: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.25);
         }
 
-        .trade-form .btn-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(255, 70, 85, 0.4);
-        }
-
-        .trade-form .btn-cancel {
+        .btn-cancel {
             background: transparent;
             border: 1px solid var(--valorant-border);
             color: var(--valorant-muted);
@@ -514,17 +339,9 @@
             border-radius: var(--radius-full);
             cursor: pointer;
             font-weight: 600;
-            font-size: 13px;
-            transition: var(--transition);
-            margin-top: 2px;
         }
 
-        .trade-form .btn-cancel:hover {
-            background: var(--valorant-border);
-            color: #fff;
-        }
-
-        /* Link Box - DÜZELTİLDİ */
+        /* Link Box */
         .link-box {
             display: none;
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
@@ -561,7 +378,6 @@
             color: #b0c0d0;
             font-size: 13px;
             outline: none;
-            font-weight: 500;
         }
 
         .link-box .copy-btn {
@@ -578,19 +394,13 @@
             align-items: center;
             gap: 8px;
             white-space: nowrap;
-            box-shadow: 0 2px 12px rgba(255, 70, 85, 0.2);
-        }
-
-        .link-box .copy-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
         }
 
         .link-box .copy-btn.copied {
             background: var(--valorant-success);
         }
 
-        /* Status */
+        /* Status & Code Display */
         .status-box {
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
             border-radius: 16px;
@@ -604,277 +414,8 @@
 
         .status-box.active {
             display: block;
-            animation: fadeSlideIn 0.3s ease;
         }
 
-        .status-box .title {
-            font-weight: 700;
-            font-size: 14px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-box .title i {
-            color: var(--valorant-red);
-        }
-
-        .status-box .desc {
-            font-size: 13px;
-            color: var(--valorant-muted);
-            line-height: 1.6;
-        }
-
-        /* Trade List */
-        .trade-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .trade-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .trade-list::-webkit-scrollbar-track {
-            background: var(--valorant-dark);
-            border-radius: 4px;
-        }
-        .trade-list::-webkit-scrollbar-thumb {
-            background: var(--valorant-red);
-            border-radius: 4px;
-        }
-
-        .trade-item {
-            background: var(--valorant-dark);
-            padding: 14px 18px;
-            border-radius: 16px;
-            border: 1px solid var(--valorant-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-            animation: slideItem 0.3s ease;
-        }
-
-        @keyframes slideItem {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .trade-item:hover {
-            border-color: var(--valorant-border-light);
-            transform: translateX(4px);
-        }
-
-        .trade-item .info .title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .trade-item .info .sub {
-            font-size: 12px;
-            color: var(--valorant-muted);
-        }
-
-        .trade-item .status-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 12px;
-            border-radius: var(--radius-full);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .trade-item .status-badge.waiting {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--valorant-warning);
-        }
-
-        .trade-item .status-badge.active {
-            background: rgba(0, 212, 170, 0.15);
-            color: var(--valorant-success);
-        }
-
-        .trade-item .status-badge.completed {
-            background: rgba(0, 212, 170, 0.2);
-            color: var(--valorant-success);
-        }
-
-        .trade-item .delete-btn {
-            background: transparent;
-            border: none;
-            color: var(--valorant-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            padding: 6px 10px;
-            border-radius: 8px;
-        }
-
-        .trade-item .delete-btn:hover {
-            color: var(--valorant-red);
-            background: rgba(255, 70, 85, 0.1);
-            transform: scale(1.1);
-        }
-
-        /* Trade Screen */
-        .trade-screen {
-            display: none;
-            animation: fadeSlideIn 0.5s ease;
-        }
-
-        .trade-screen.visible {
-            display: block;
-        }
-
-        .trade-screen .screen-header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--valorant-border);
-        }
-
-        .trade-screen .screen-header h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .trade-screen .screen-header p {
-            color: var(--valorant-muted);
-            font-size: 14px;
-        }
-
-        .trade-screen .profiles {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin: 24px 0;
-            padding: 20px;
-            background: var(--valorant-dark);
-            border-radius: 16px;
-            border: 1px solid var(--valorant-border);
-        }
-
-        .trade-screen .profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .trade-screen .profile .avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: 3px solid var(--valorant-border);
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .trade-screen .profile .avatar.ready {
-            border-color: var(--valorant-success);
-            box-shadow: 0 0 24px rgba(0, 212, 170, 0.3);
-        }
-
-        .trade-screen .profile .avatar.waiting {
-            border-color: var(--valorant-warning);
-            box-shadow: 0 0 24px rgba(255, 170, 0, 0.2);
-        }
-
-        .trade-screen .profile .name {
-            font-weight: 700;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .trade-screen .profile .status-text {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--valorant-muted);
-        }
-
-        .trade-screen .profile .status-text.ready {
-            color: var(--valorant-success);
-        }
-
-        .trade-screen .profile .status-text.waiting {
-            color: var(--valorant-warning);
-        }
-
-        .trade-screen .vs-icon {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--valorant-red);
-            text-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
-            animation: vsPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes vsPulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.7;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
-        }
-
-        .trade-screen .partner-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .trade-screen .partner-form input {
-            background: var(--valorant-card);
-            border: 1px solid var(--valorant-border);
-            border-radius: var(--radius-full);
-            padding: 13px 20px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .trade-screen .partner-form input:focus {
-            border-color: var(--valorant-red);
-            box-shadow: 0 0 0 4px rgba(255, 70, 85, 0.12);
-        }
-
-        .trade-screen .partner-form .btn-join {
-            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
-            border: none;
-            color: #fff;
-            font-weight: 700;
-            padding: 15px;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 16px rgba(255, 70, 85, 0.25);
-        }
-
-        .trade-screen .partner-form .btn-join:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(255, 70, 85, 0.4);
-        }
-
-        /* Code Section */
         .code-section {
             display: none;
             margin-top: 18px;
@@ -882,51 +423,6 @@
 
         .code-section.visible {
             display: block;
-            animation: fadeSlideIn 0.3s ease;
-        }
-
-        .code-section .code-wrapper {
-            background: linear-gradient(135deg, var(--valorant-dark), #141e28);
-            padding: 18px 20px;
-            border-radius: 16px;
-            border: 1px solid var(--valorant-border);
-        }
-
-        .code-section .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .code-section .code-header .label {
-            font-weight: 600;
-            color: #b0c0d0;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .code-section .code-header .status-badge {
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 14px;
-            border-radius: var(--radius-full);
-            background: rgba(255, 70, 85, 0.15);
-            color: var(--valorant-red);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .code-section .code-header .status-badge.ready {
-            background: rgba(0, 212, 170, 0.15);
-            color: var(--valorant-success);
-        }
-
-        .code-section .code-header .status-badge.waiting {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--valorant-warning);
         }
 
         .code-display {
@@ -940,24 +436,11 @@
             color: #fff;
             margin: 10px 0 14px;
             font-weight: 800;
-            font-variant-numeric: tabular-nums;
-            animation: codeGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes codeGlow {
-            0%,
-            100% {
-                border-color: var(--valorant-red);
-            }
-            50% {
-                border-color: #ff6a78;
-            }
         }
 
         .code-input-group {
             display: flex;
             gap: 10px;
-            margin-top: 4px;
         }
 
         .code-input-group input {
@@ -972,12 +455,6 @@
             text-align: center;
             letter-spacing: 6px;
             outline: none;
-            transition: var(--transition);
-        }
-
-        .code-input-group input:focus {
-            border-color: var(--valorant-red);
-            box-shadow: 0 0 0 4px rgba(255, 70, 85, 0.12);
         }
 
         .code-input-group .btn-verify {
@@ -985,69 +462,9 @@
             border: none;
             color: #fff;
             font-weight: 700;
-            padding: 12px 28px;
+            padding: 12px 24px;
             border-radius: var(--radius-full);
             cursor: pointer;
-            transition: var(--transition);
-            font-size: 14px;
-            white-space: nowrap;
-            box-shadow: 0 2px 12px rgba(255, 70, 85, 0.2);
-        }
-
-        .code-input-group .btn-verify:hover {
-            transform: scale(1.04);
-            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
-        }
-
-        .partner-code-box {
-            background: var(--valorant-dark);
-            padding: 14px 18px;
-            border-radius: 12px;
-            border-left: 4px solid var(--valorant-red);
-            margin-top: 14px;
-            display: none;
-        }
-
-        .partner-code-box.visible {
-            display: block;
-            animation: fadeSlideIn 0.3s ease;
-        }
-
-        .partner-code-box .label {
-            font-size: 11px;
-            color: var(--valorant-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            font-weight: 700;
-        }
-
-        .partner-code-box .code {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 8px;
-            margin-top: 2px;
-        }
-
-        /* Footer */
-        .footer-text {
-            margin-top: 32px;
-            font-size: 12px;
-            color: var(--valorant-muted-dark);
-            text-align: center;
-            border-top: 1px solid var(--valorant-border);
-            padding-top: 20px;
-            line-height: 2;
-        }
-
-        .footer-text i {
-            color: var(--valorant-red);
-            margin: 0 4px;
-        }
-
-        .footer-text .brand {
-            font-weight: 700;
-            color: #b0c0d0;
         }
 
         /* Toast */
@@ -1066,117 +483,19 @@
             box-shadow: var(--shadow-heavy);
             z-index: 999;
             display: none;
-            animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            max-width: 92%;
-            text-align: center;
-            backdrop-filter: blur(16px);
         }
 
         .toast.show {
             display: block;
+            animation: slideUp 0.3s ease;
         }
 
-        .toast.success {
-            border-color: var(--valorant-success);
-        }
-
-        .toast.error {
-            border-color: var(--valorant-red);
-        }
-
-        .toast.warning {
-            border-color: var(--valorant-warning);
-        }
+        .toast.success { border-color: var(--valorant-success); }
+        .toast.error { border-color: var(--valorant-red); }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(30px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1);
-            }
-        }
-
-        @media (max-width: 520px) {
-            .container {
-                padding: 24px 16px;
-                border-radius: 24px;
-            }
-            .login-box {
-                padding: 32px 20px;
-                border-radius: 20px;
-            }
-            .login-box h1 {
-                font-size: 28px;
-            }
-            .user-bar {
-                flex-wrap: wrap;
-                gap: 10px;
-                padding: 12px 14px;
-            }
-            .user-bar .logout-btn {
-                margin-left: auto;
-            }
-            .code-display {
-                font-size: 24px;
-                letter-spacing: 6px;
-            }
-            .code-input-group {
-                flex-direction: column;
-            }
-            .code-input-group .btn-verify {
-                width: 100%;
-                justify-content: center;
-            }
-            .trade-screen .profiles {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .trade-screen .vs-icon {
-                transform: rotate(90deg);
-            }
-            .tabs {
-                flex-direction: column;
-                border-radius: 16px;
-            }
-            .tab-btn {
-                padding: 12px 0;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .container {
-                padding: 16px 12px;
-            }
-            .login-box {
-                padding: 24px 16px;
-            }
-            .user-bar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .user-bar .user-details {
-                text-align: center;
-            }
-            .user-bar .logout-btn {
-                margin: 0 auto;
-                width: fit-content;
-            }
-            .link-box {
-                flex-direction: column;
-            }
-            .link-box .copy-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            .code-display {
-                font-size: 20px;
-                letter-spacing: 4px;
-                padding: 12px;
-            }
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
     </style>
 </head>
@@ -1184,24 +503,24 @@
 
     <div class="container" id="appContainer">
 
-        <!-- LOGIN -->
+        <!-- LOGIN PANEL -->
         <div id="loginSection" class="login-box">
             <span class="logo-icon"><i class="fas fa-crosshairs"></i></span>
             <h1>ValoTakas</h1>
-            <p class="subtitle">Valorant Takas Platformu</p>
+            <p class="subtitle">Valorant Güvenli Takas Platformu</p>
             <button id="loginBtn" class="google-btn">
                 <i class="fab fa-google"></i> Google ile Giriş Yap
             </button>
             <div class="divider"><span>güvenli &amp; hızlı</span></div>
-            <p class="footer-note">
-                <i class="fas fa-shield-alt"></i> Firebase Authentication ile korunur
+            <p style="font-size: 12px; color: var(--valorant-muted-dark);">
+                <i class="fas fa-shield-alt" style="color:var(--valorant-red)"></i> Firebase Entegrasyonu Akif
             </p>
         </div>
 
-        <!-- APP -->
+        <!-- APP PANEL -->
         <div id="appSection" class="app-section">
 
-            <!-- User Bar -->
+            <!-- User Info Bar -->
             <div class="user-bar">
                 <img id="userPhoto" src="https://via.placeholder.com/44" alt="profil" />
                 <div class="user-details">
@@ -1211,34 +530,30 @@
                 <button id="logoutBtn" class="logout-btn">Çıkış</button>
             </div>
 
-            <!-- Tabs -->
+            <!-- Navigation Tabs -->
             <div class="tabs">
-                <button class="tab-btn active" data-tab="tab-trade"><i class="fas fa-plus-circle"></i> Takas</button>
-                <button class="tab-btn" data-tab="tab-list"><i class="fas fa-list"></i> Listem</button>
+                <button class="tab-btn active" data-tab="tab-trade"><i class="fas fa-plus-circle"></i> Takas Oluştur</button>
+                <button class="tab-btn" data-tab="tab-list"><i class="fas fa-list"></i> Takaslarım</button>
             </div>
 
-            <!-- Tab: Takas -->
+            <!-- Tab Content: Takas -->
             <div id="tab-trade" class="tab-content active">
                 <button id="openTradeBtn" class="btn-primary">
-                    <span class="icon"><i class="fas fa-plus-circle"></i></span>
-                    Yeni Takas Aç
-                    <span style="font-size:12px; opacity:0.6; font-weight:400;">⚡</span>
+                    <i class="fas fa-plus-circle"></i> Yeni Takas Başlat ⚡
                 </button>
 
                 <div id="tradeForm" class="trade-form">
-                    <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
-                    <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" autocomplete="off" />
-                    <label><i class="fas fa-lock"></i> Valorant Şifre</label>
+                    <label><i class="fas fa-user" style="color:var(--valorant-red)"></i> Valorant Kullanıcı Adı (Riot ID)</label>
+                    <input type="text" id="tradeUsername" placeholder="Örn: Player#TR1" autocomplete="off" />
+                    <label><i class="fas fa-lock" style="color:var(--valorant-red)"></i> Valorant Hesabı Şifresi</label>
                     <input type="password" id="tradePassword" placeholder="Şifreniz" autocomplete="off" />
-                    <button id="confirmTradeBtn" class="btn-confirm">
-                        <i class="fas fa-check-circle"></i> Takas Oluştur
-                    </button>
+                    <button id="confirmTradeBtn" class="btn-confirm">Takası Başlat & Link Üret</button>
                     <button id="cancelTradeBtn" class="btn-cancel">İptal</button>
                 </div>
 
-                <!-- LINK BOX - ÇALIŞIR HALİ -->
+                <!-- GERÇEK ÇALIŞAN LİNK KUTUSU -->
                 <div id="linkBox" class="link-box">
-                    <span class="link-label"><i class="fas fa-link"></i> Takas Linki</span>
+                    <span class="link-label"><i class="fas fa-link"></i> Takas Linkiniz Üretildi</span>
                     <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
                     <button id="copyLinkBtn" class="copy-btn">
                         <i class="fas fa-copy"></i> Kopyala
@@ -1246,132 +561,52 @@
                 </div>
 
                 <div id="statusBox" class="status-box">
-                    <div class="title"><i class="fas fa-exchange-alt"></i> Aktif Takas</div>
-                    <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
+                    <div style="font-weight: 700; color: #fff; margin-bottom: 4px;">
+                        <i class="fas fa-exchange-alt" style="color:var(--valorant-red)"></i> Aktif Takas Durumu
+                    </div>
+                    <div class="desc" id="statusDesc" style="font-size:13px; color:var(--valorant-muted)">
+                        Takas linkiniz hazır. Karşı tarafın adresi ziyaret etmesi bekleniyor.
+                    </div>
                 </div>
 
                 <div id="codeSection" class="code-section">
-                    <div class="code-wrapper">
-                        <div class="code-header">
-                            <span class="label"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
-                            <span id="codeStatus" class="status-badge waiting">BEKLİYOR</span>
+                    <div style="background: linear-gradient(135deg, var(--valorant-dark), #141e28); padding: 18px; border-radius: 16px; border: 1px solid var(--valorant-border);">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:14px;"><i class="fas fa-qrcode"></i> Doğrulama Kodunuz</span>
+                            <span id="codeStatus" style="font-size:10px; padding:3px 8px; border-radius:10px; background:rgba(255,170,0,0.2); color:var(--valorant-warning)">BEKLİYOR</span>
                         </div>
                         <div class="code-display" id="myCodeDisplay">------</div>
                         <div class="code-input-group">
-                            <input type="text" id="codeInput" placeholder="6 haneli kod" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
-                            <button id="confirmCodeBtn" class="btn-verify">
-                                <i class="fas fa-check"></i> Doğrula
-                            </button>
-                        </div>
-                        <div id="partnerCodeBox" class="partner-code-box">
-                            <div class="label">Partner Kodu</div>
-                            <div class="code" id="partnerCodeDisplay">------</div>
+                            <input type="text" id="codeInput" placeholder="6 Haneli Kod" maxlength="6" />
+                            <button id="confirmCodeBtn" class="btn-verify">Onayla</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab: Listem -->
+            <!-- Tab Content: Listem -->
             <div id="tab-list" class="tab-content">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <span style="font-weight:600; color:var(--valorant-muted); font-size:13px;">Aktif Takasların</span>
-                    <button id="refreshListBtn" class="btn-secondary" style="padding:6px 16px; font-size:12px; background:var(--valorant-dark); border:1px solid var(--valorant-border); color:var(--valorant-muted); border-radius:var(--radius-full); cursor:pointer; transition:var(--transition);">
-                        <i class="fas fa-sync-alt"></i> Yenile
-                    </button>
-                </div>
-                <div id="tradeListContainer" class="trade-list">
-                    <div style="text-align:center; color:var(--valorant-muted-dark); padding:30px 0; font-size:14px;">
-                        <i class="fas fa-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>
-                        Henüz takasın yok.
+                <div id="tradeListContainer" style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="text-align:center; color:var(--valorant-muted); padding:20px 0;">
+                        Henüz aktif bir takas bulunmuyor.
                     </div>
                 </div>
             </div>
 
-            <!-- Trade Screen -->
-            <div id="tradeScreen" class="trade-screen">
-                <div class="screen-header">
-                    <h2><i class="fas fa-handshake" style="color:var(--valorant-red);"></i> Takas Ekranı</h2>
-                    <p>Karşılıklı onay bekleniyor</p>
-                </div>
-
-                <div class="profiles">
-                    <div class="profile" id="profile-me">
-                        <img id="screenMyPhoto" class="avatar waiting" src="https://via.placeholder.com/64" alt="Ben" />
-                        <div class="name" id="screenMyName">Ben</div>
-                        <div class="status-text waiting" id="screenMyStatus">Hazır değil</div>
-                    </div>
-                    <div class="vs-icon">⚔️</div>
-                    <div class="profile" id="profile-partner">
-                        <img id="screenPartnerPhoto" class="avatar waiting" src="https://via.placeholder.com/64" alt="Partner" />
-                        <div class="name" id="screenPartnerName">Partner</div>
-                        <div class="status-text waiting" id="screenPartnerStatus">Bekleniyor</div>
-                    </div>
-                </div>
-
-                <div id="partnerFormContainer" class="partner-form">
-                    <input type="text" id="partnerUsername" placeholder="Valorant Kullanıcı Adın" />
-                    <input type="password" id="partnerPassword" placeholder="Valorant Şifren" />
-                    <button id="joinTradeBtn" class="btn-join">
-                        <i class="fas fa-check-circle"></i> Takasa Katıl
-                    </button>
-                </div>
-
-                <div id="partnerCodeSection" style="display:none; margin-top:16px;">
-                    <div style="background:var(--valorant-dark); padding:16px; border-radius:16px; border:1px solid var(--valorant-border);">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:600; color:#b0c0d0;"><i class="fas fa-qrcode"></i> Kod Doğrulama</span>
-                            <span id="partnerCodeStatus" class="status-badge waiting">BEKLİYOR</span>
-                        </div>
-                        <div class="code-display" id="partnerMyCode">------</div>
-                        <div class="code-input-group">
-                            <input type="text" id="partnerCodeInput" placeholder="6 haneli kod" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
-                            <button id="partnerConfirmCodeBtn" class="btn-verify">
-                                <i class="fas fa-check"></i> Doğrula
-                            </button>
-                        </div>
-                        <div id="partnerPartnerCodeBox" class="partner-code-box" style="display:none;">
-                            <div class="label">Karşı Taraf Kodu</div>
-                            <div class="code" id="partnerPartnerCode">------</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-text">
-                <i class="fas fa-crosshairs"></i>
-                <span class="brand">ValoTakas</span> · Valorant Takas Platformu
-                <br /><span style="color: var(--valorant-muted-dark);">© 2026 · Güvenli ve hızlı</span>
+            <div style="margin-top:24px; font-size:11px; color:var(--valorant-muted-dark); text-align:center;">
+                ValoTakas &copy; 2026 · Valorant Trading System Protocol
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
-    <!-- FIREBASE -->
+    <!-- FIREBASE AND SCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-        import {
-            getAuth,
-            signInWithPopup,
-            GoogleAuthProvider,
-            onAuthStateChanged,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            setDoc,
-            getDoc,
-            updateDoc,
-            onSnapshot,
-            collection,
-            query,
-            where,
-            getDocs,
-            deleteDoc
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCRIlZJQkQhAx87I9W4EdGrSsWPNYZF5zU",
@@ -1379,757 +614,145 @@
             projectId: "valotakasofficial",
             storageBucket: "valotakasofficial.firebasestorage.app",
             messagingSenderId: "1614560180",
-            appId: "1:1614560180:web:d03a7d64c9b229a8a010e1",
-            measurementId: "G-N09VJ4TZNE"
+            appId: "1:1614560180:web:d03a7d64c9b229a8a010e1"
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
-        console.log('🔥 Firebase initialized');
-
-        // ---- DOM ----
+        // UI Element References
         const loginSection = document.getElementById('loginSection');
         const appSection = document.getElementById('appSection');
         const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
-        const userPhoto = document.getElementById('userPhoto');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-
-        const tabs = document.querySelectorAll('.tab-btn');
-        const tabTrade = document.getElementById('tab-trade');
-        const tabList = document.getElementById('tab-list');
-
         const openTradeBtn = document.getElementById('openTradeBtn');
         const tradeForm = document.getElementById('tradeForm');
-        const tradeUsername = document.getElementById('tradeUsername');
-        const tradePassword = document.getElementById('tradePassword');
         const confirmTradeBtn = document.getElementById('confirmTradeBtn');
         const cancelTradeBtn = document.getElementById('cancelTradeBtn');
-
         const linkBox = document.getElementById('linkBox');
         const tradeLinkInput = document.getElementById('tradeLinkInput');
         const copyLinkBtn = document.getElementById('copyLinkBtn');
-
         const statusBox = document.getElementById('statusBox');
-        const statusDesc = document.getElementById('statusDesc');
-        const refreshListBtn = document.getElementById('refreshListBtn');
-        const tradeListContainer = document.getElementById('tradeListContainer');
-
         const codeSection = document.getElementById('codeSection');
-        const myCodeDisplay = document.getElementById('myCodeDisplay');
-        const codeInput = document.getElementById('codeInput');
-        const confirmCodeBtn = document.getElementById('confirmCodeBtn');
-        const partnerCodeBox = document.getElementById('partnerCodeBox');
-        const partnerCodeDisplay = document.getElementById('partnerCodeDisplay');
-        const codeStatus = document.getElementById('codeStatus');
-
-        const tradeScreen = document.getElementById('tradeScreen');
-        const screenMyPhoto = document.getElementById('screenMyPhoto');
-        const screenMyName = document.getElementById('screenMyName');
-        const screenMyStatus = document.getElementById('screenMyStatus');
-        const screenPartnerPhoto = document.getElementById('screenPartnerPhoto');
-        const screenPartnerName = document.getElementById('screenPartnerName');
-        const screenPartnerStatus = document.getElementById('screenPartnerStatus');
-        const partnerFormContainer = document.getElementById('partnerFormContainer');
-        const partnerUsername = document.getElementById('partnerUsername');
-        const partnerPassword = document.getElementById('partnerPassword');
-        const joinTradeBtn = document.getElementById('joinTradeBtn');
-        const partnerCodeSection = document.getElementById('partnerCodeSection');
-        const partnerMyCode = document.getElementById('partnerMyCode');
-        const partnerCodeInput = document.getElementById('partnerCodeInput');
-        const partnerConfirmCodeBtn = document.getElementById('partnerConfirmCodeBtn');
-        const partnerPartnerCodeBox = document.getElementById('partnerPartnerCodeBox');
-        const partnerPartnerCode = document.getElementById('partnerPartnerCode');
-        const partnerCodeStatus = document.getElementById('partnerCodeStatus');
-
         const toast = document.getElementById('toast');
 
-        // ---- State ----
         let currentUser = null;
         let currentTradeId = null;
-        let unsubscribeTrade = null;
-        let currentTradeData = null;
-        let toastTimeout = null;
 
-        // ---- Helpers ----
-        function showLogin() {
-            loginSection.style.display = 'block';
-            appSection.classList.remove('active');
-            tradeScreen.classList.remove('visible');
-            resetUI();
-        }
-
-        function showApp() {
-            loginSection.style.display = 'none';
-            appSection.classList.add('active');
-        }
-
-        function resetUI() {
-            tradeForm.classList.remove('active');
-            linkBox.classList.remove('active');
-            statusBox.classList.remove('active');
-            codeSection.classList.remove('visible');
-            partnerCodeBox.classList.remove('visible');
-            partnerCodeSection.style.display = 'none';
-            partnerPartnerCodeBox.style.display = 'none';
-            tradeScreen.classList.remove('visible');
-            if (unsubscribeTrade) {
-                unsubscribeTrade();
-                unsubscribeTrade = null;
-            }
-            currentTradeId = null;
-            currentTradeData = null;
-        }
-
-        function setUser(user) {
-            if (user) {
-                userName.textContent = user.displayName || 'Valorant Oyuncusu';
-                userEmail.textContent = user.email;
-                userPhoto.src = user.photoURL ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=ff4655&color=fff&size=44`;
-                screenMyPhoto.src = userPhoto.src;
-                screenMyName.textContent = user.displayName || 'Ben';
-            }
-        }
-
-        function generateCode() {
-            return String(Math.floor(100000 + Math.random() * 900000));
-        }
-
-        // LİNK OLUŞTURMA - ÇALIŞIR GARANTİLİ
-        function getTradeLink(tradeId) {
-            const origin = window.location.origin;
-            const path = window.location.pathname;
-            return origin + path + '?tradeId=' + tradeId;
-        }
-
-        function showToast(message, type = 'success') {
-            if (toastTimeout) { clearTimeout(toastTimeout);
-                toast.classList.remove('show'); }
-            const icon = type === 'error' ? '❌' : type === 'warning' ? '⚠️' : '✅';
-            toast.innerHTML = `<span style="margin-right:8px;">${icon}</span> ${message}`;
+        function showToast(msg, type = 'success') {
+            toast.textContent = msg;
             toast.className = `toast show ${type}`;
-            toastTimeout = setTimeout(() => { toast.classList.remove('show');
-                toastTimeout = null; }, 4500);
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
-        // ---- Tabs ----
-        tabs.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabs.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                if (btn.dataset.tab === 'tab-trade') {
-                    tabTrade.classList.add('active');
-                    tabList.classList.remove('active');
-                } else {
-                    tabList.classList.add('active');
-                    tabTrade.classList.remove('active');
-                    if (currentUser) loadTradeList(currentUser.uid);
-                }
-            });
-        });
-
-        // ---- Trade List ----
-        async function loadTradeList(userId) {
-            try {
-                const q = query(collection(db, "trades"),
-                    where("creatorId", "==", userId),
-                    where("status", "in", ["waiting_partner", "waiting_codes", "completed"])
-                );
-                const snap = await getDocs(q);
-                if (snap.empty) {
-                    tradeListContainer.innerHTML = `
-                        <div style="text-align:center; color:var(--valorant-muted-dark); padding:30px 0; font-size:14px;">
-                            <i class="fas fa-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>
-                            Henüz takasın yok.
-                        </div>
-                    `;
-                    return;
-                }
-                let html = '';
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const statusMap = {
-                        'waiting_partner': { label: 'Bekliyor', cls: 'waiting' },
-                        'waiting_codes': { label: 'Aktif', cls: 'active' },
-                        'completed': { label: 'Tamamlandı', cls: 'completed' }
-                    };
-                    const st = statusMap[data.status] || { label: data.status, cls: 'waiting' };
-                    html += `
-                        <div class="trade-item">
-                            <div class="info">
-                                <div class="title">${data.creatorUsername || 'İsimsiz'}</div>
-                                <div class="sub">${data.partnerUsername ? 'Partner: ' + data.partnerUsername : 'Partner bekleniyor'}</div>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span class="status-badge ${st.cls}">${st.label}</span>
-                                <button class="delete-btn" data-trade-id="${doc.id}"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    `;
-                });
-                tradeListContainer.innerHTML = html;
-
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const tradeId = btn.dataset.tradeId;
-                        if (confirm('Bu takası silmek istediğinize emin misiniz?')) {
-                            try {
-                                await deleteDoc(doc(db, "trades", tradeId));
-                                showToast('Takas silindi.', 'success');
-                                loadTradeList(userId);
-                            } catch (e) {
-                                showToast('Silme hatası: ' + e.message, 'error');
-                            }
-                        }
-                    });
-                });
-            } catch (e) {
-                console.error('Load trade list error:', e);
-                showToast('Takas listesi yüklenemedi: ' + e.message, 'error');
-            }
+        // GERÇEK DİNAMİK LİNK ÜRETİCİ
+        function generateTradeLink(id) {
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            return `${baseUrl}?tradeId=${id}`;
         }
 
-        refreshListBtn.addEventListener('click', () => {
-            if (currentUser) loadTradeList(currentUser.uid);
-        });
-
-        // ---- Firestore: Takas Dinle ----
-        async function listenForTrade(userId) {
-            if (unsubscribeTrade) { unsubscribeTrade();
-                unsubscribeTrade = null; }
-            try {
-                const qCreator = query(collection(db, "trades"),
-                    where("creatorId", "==", userId),
-                    where("status", "in", ["waiting_partner", "waiting_codes"])
-                );
-                const snapCreator = await getDocs(qCreator);
-                if (!snapCreator.empty) {
-                    const docSnap = snapCreator.docs[0];
-                    currentTradeId = docSnap.id;
-                    currentTradeData = docSnap.data();
-                    setupTradeUI(docSnap.id, docSnap.data(), userId);
-                    unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
-                        if (doc.exists()) {
-                            currentTradeData = doc.data();
-                            setupTradeUI(doc.id, doc.data(), userId);
-                        } else {
-                            resetUI();
-                            showToast('Takas sonlandırıldı.', 'warning');
-                        }
-                    });
-                    return;
-                }
-                const qPartner = query(collection(db, "trades"),
-                    where("partnerId", "==", userId),
-                    where("status", "in", ["waiting_codes"])
-                );
-                const snapPartner = await getDocs(qPartner);
-                if (!snapPartner.empty) {
-                    const docSnap = snapPartner.docs[0];
-                    currentTradeId = docSnap.id;
-                    currentTradeData = docSnap.data();
-                    setupTradeUI(docSnap.id, docSnap.data(), userId);
-                    unsubscribeTrade = onSnapshot(doc(db, "trades", currentTradeId), (doc) => {
-                        if (doc.exists()) {
-                            currentTradeData = doc.data();
-                            setupTradeUI(doc.id, doc.data(), userId);
-                        } else {
-                            resetUI();
-                            showToast('Takas sonlandırıldı.', 'warning');
-                        }
-                    });
-                    return;
-                }
-                resetUI();
-                statusBox.classList.remove('active');
-                linkBox.classList.remove('active');
-                tradeForm.classList.remove('active');
-                tradeScreen.classList.remove('visible');
-            } catch (error) {
-                console.error('ListenForTrade error:', error);
-                showToast('Takas durumu alınamadı: ' + error.message, 'error');
-            }
-        }
-
-        // ---- Takas UI Güncelle ----
-        function setupTradeUI(tradeId, data, userId) {
-            currentTradeId = tradeId;
-            currentTradeData = data;
-            tradeForm.classList.remove('active');
-            linkBox.classList.remove('active');
-            statusBox.classList.remove('active');
-            codeSection.classList.remove('visible');
-            partnerCodeBox.classList.remove('visible');
-            tradeScreen.classList.remove('visible');
-            partnerCodeSection.style.display = 'none';
-            partnerPartnerCodeBox.style.display = 'none';
-
-            if (data.status === 'waiting_partner' && data.creatorId === userId) {
-                const link = getTradeLink(tradeId);
-                tradeLinkInput.value = link;
-                linkBox.classList.add('active');
-                statusBox.classList.add('active');
-                statusDesc.textContent = 'Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.';
-                console.log('🔗 Link oluşturuldu:', link);
-                return;
-            }
-
-            if (data.status === 'waiting_codes') {
-                codeSection.classList.add('visible');
-                statusBox.classList.add('active');
-                statusDesc.textContent = 'Kod doğrulama aşaması. Karşılıklı kodları girin.';
-
-                if (data.creatorId === userId) {
-                    myCodeDisplay.textContent = data.creatorCode || '------';
-                    if (data.partnerCode) {
-                        partnerCodeDisplay.textContent = data.partnerCode;
-                        partnerCodeBox.classList.add('visible');
-                        codeStatus.textContent = 'PARTNER KODU GELDİ';
-                        codeStatus.className = 'status-badge ready';
-                    } else {
-                        partnerCodeBox.classList.remove('visible');
-                        codeStatus.textContent = 'PARTNER BEKLENİYOR';
-                        codeStatus.className = 'status-badge waiting';
-                    }
-                } else if (data.partnerId === userId) {
-                    myCodeDisplay.textContent = data.partnerCode || '------';
-                    if (data.creatorCode) {
-                        partnerCodeDisplay.textContent = data.creatorCode;
-                        partnerCodeBox.classList.add('visible');
-                        codeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
-                        codeStatus.className = 'status-badge ready';
-                    } else {
-                        partnerCodeBox.classList.remove('visible');
-                        codeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
-                        codeStatus.className = 'status-badge waiting';
-                    }
-                }
-                showTradeScreen(data, userId);
-                return;
-            }
-
-            if (data.status === 'completed') {
-                showToast('🎉 Takas başarıyla tamamlandı!', 'success');
-                resetUI();
-                return;
-            }
-            if (data.status === 'cancelled') {
-                showToast('Takas iptal edildi.', 'warning');
-                resetUI();
-                return;
-            }
-            resetUI();
-        }
-
-        // ---- Takas Ekranı ----
-        function showTradeScreen(data, userId) {
-            tradeScreen.classList.add('visible');
-
-            screenMyPhoto.src = currentUser?.photoURL || 'https://ui-avatars.com/api/?name=Ben&background=ff4655&color=fff&size=64';
-            screenMyName.textContent = currentUser?.displayName || 'Ben';
-
-            const partnerId = data.creatorId === userId ? data.partnerId : data.creatorId;
-            const partnerName = data.creatorId === userId ? data.partnerUsername : data.creatorUsername;
-
-            if (partnerId) {
-                screenPartnerPhoto.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(partnerName || 'Partner') +
-                    '&background=ff4655&color=fff&size=64';
-                screenPartnerName.textContent = partnerName || 'Partner';
-                screenPartnerStatus.textContent = 'Hazır';
-                screenPartnerStatus.className = 'status-text ready';
-                screenPartnerPhoto.className = 'avatar ready';
-                screenMyStatus.textContent = 'Hazır';
-                screenMyStatus.className = 'status-text ready';
-                screenMyPhoto.className = 'avatar ready';
-                partnerFormContainer.style.display = 'none';
-                partnerCodeSection.style.display = 'block';
-
-                if (data.creatorId === userId) {
-                    partnerMyCode.textContent = data.creatorCode || '------';
-                    if (data.partnerCode) {
-                        partnerPartnerCode.textContent = data.partnerCode;
-                        partnerPartnerCodeBox.style.display = 'block';
-                        partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
-                        partnerCodeStatus.className = 'status-badge ready';
-                    } else {
-                        partnerPartnerCodeBox.style.display = 'none';
-                        partnerCodeStatus.textContent = 'PARTNER BEKLENİYOR';
-                        partnerCodeStatus.className = 'status-badge waiting';
-                    }
-                } else {
-                    partnerMyCode.textContent = data.partnerCode || '------';
-                    if (data.creatorCode) {
-                        partnerPartnerCode.textContent = data.creatorCode;
-                        partnerPartnerCodeBox.style.display = 'block';
-                        partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
-                        partnerCodeStatus.className = 'status-badge ready';
-                    } else {
-                        partnerPartnerCodeBox.style.display = 'none';
-                        partnerCodeStatus.textContent = 'KARŞI TARAF BEKLENİYOR';
-                        partnerCodeStatus.className = 'status-badge waiting';
-                    }
+        // Auth Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('userName').textContent = user.displayName || 'Oyuncu';
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/44';
+                loginSection.style.display = 'none';
+                appSection.classList.add('active');
+                
+                // URL'den takas ID kontrolü
+                const urlParams = new URLSearchParams(window.location.search);
+                const tradeIdFromUrl = urlParams.get('tradeId');
+                if (tradeIdFromUrl) {
+                    showToast("Takas bağlantısı tespit edildi!", "success");
+                    listenToTrade(tradeIdFromUrl);
                 }
             } else {
-                screenPartnerPhoto.className = 'avatar waiting';
-                screenPartnerName.textContent = '???';
-                screenPartnerStatus.textContent = 'Bekleniyor';
-                screenPartnerStatus.className = 'status-text waiting';
-                screenMyStatus.textContent = 'Hazır';
-                screenMyStatus.className = 'status-text ready';
-                screenMyPhoto.className = 'avatar ready';
-                partnerFormContainer.style.display = 'block';
-                partnerCodeSection.style.display = 'none';
-
-                joinTradeBtn.onclick = async () => {
-                    const pUsername = partnerUsername.value.trim();
-                    const pPassword = partnerPassword.value.trim();
-                    if (!pUsername || !pPassword) {
-                        showToast('Lütfen tüm alanları doldurun.', 'error');
-                        return;
-                    }
-                    await joinTradeAsPartner(currentTradeId, pUsername, pPassword);
-                };
-            }
-        }
-
-        // ---- Takas Oluştur ----
-        async function createTrade(username, password) {
-            if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return false; }
-            if (currentTradeId) { showToast('Zaten aktif bir takasınız var.', 'warning'); return false; }
-            try {
-                const tradeData = {
-                    creatorId: currentUser.uid,
-                    creatorUsername: username,
-                    creatorPassword: password,
-                    creatorCode: generateCode(),
-                    creatorConfirmed: false,
-                    partnerId: null,
-                    partnerUsername: '',
-                    partnerPassword: '',
-                    partnerCode: '',
-                    partnerConfirmed: false,
-                    status: 'waiting_partner',
-                    createdAt: new Date().toISOString()
-                };
-                const docRef = doc(collection(db, "trades"));
-                await setDoc(docRef, tradeData);
-                currentTradeId = docRef.id;
-                currentTradeData = tradeData;
-                showToast('✅ Takas oluşturuldu! Linki kopyalayın.', 'success');
-                await listenForTrade(currentUser.uid);
-                loadTradeList(currentUser.uid);
-                return true;
-            } catch (error) {
-                console.error('Create trade error:', error);
-                showToast('Takas oluşturulamadı: ' + error.message, 'error');
-                return false;
-            }
-        }
-
-        // ---- Partner Katıl ----
-        async function joinTradeAsPartner(tradeId, username, password) {
-            if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return false; }
-            try {
-                const docRef = doc(db, "trades", tradeId);
-                const docSnap = await getDoc(docRef);
-                if (!docSnap.exists()) { showToast('Geçersiz takas linki.', 'error'); return false; }
-                const data = docSnap.data();
-                if (data.creatorId === currentUser.uid) { showToast('Bu takas size ait.', 'warning'); return false; }
-                if (data.partnerId) { showToast('Bu takasa zaten bir partner katılmış.', 'error'); return false; }
-                if (data.status !== 'waiting_partner') { showToast('Bu takas artık geçerli değil.', 'error'); return false; }
-                const partnerCode = generateCode();
-                await updateDoc(docRef, {
-                    partnerId: currentUser.uid,
-                    partnerUsername: username,
-                    partnerPassword: password,
-                    partnerCode: partnerCode,
-                    status: 'waiting_codes',
-                    updatedAt: new Date().toISOString()
-                });
-                showToast('✅ Partner bilgileri kaydedildi.', 'success');
-                await listenForTrade(currentUser.uid);
-                loadTradeList(currentUser.uid);
-                return true;
-            } catch (error) {
-                console.error('Join trade error:', error);
-                showToast('Katılım başarısız: ' + error.message, 'error');
-                return false;
-            }
-        }
-
-        // ---- Partner Join via URL ----
-        async function handlePartnerJoin() {
-            const params = new URLSearchParams(window.location.search);
-            const tradeId = params.get('tradeId');
-            if (!tradeId || !currentUser) return;
-
-            if (currentTradeId) {
-                if (currentTradeId !== tradeId) {
-                    resetUI();
-                } else {
-                    return;
-                }
-            }
-
-            try {
-                const docRef = doc(db, "trades", tradeId);
-                const docSnap = await getDoc(docRef);
-                if (!docSnap.exists()) { showToast('Geçersiz takas linki.', 'error'); return; }
-                const data = docSnap.data();
-
-                if (data.creatorId === currentUser.uid) {
-                    showToast('Bu takas size ait.', 'warning');
-                    await listenForTrade(currentUser.uid);
-                    return;
-                }
-
-                if (data.partnerId) {
-                    if (data.partnerId === currentUser.uid) {
-                        currentTradeId = tradeId;
-                        currentTradeData = data;
-                        setupTradeUI(tradeId, data, currentUser.uid);
-                        return;
-                    } else {
-                        showToast('Bu takasa zaten bir partner katılmış.', 'error');
-                        return;
-                    }
-                }
-
-                if (data.status !== 'waiting_partner') {
-                    showToast('Bu takas artık geçerli değil.', 'error');
-                    return;
-                }
-
-                currentTradeId = tradeId;
-                currentTradeData = data;
-                showTradeScreen(data, currentUser.uid);
-
-                if (window.history && window.history.replaceState) {
-                    const newUrl = window.location.pathname + window.location.search.replace(/[?&]tradeId=[^&]*/, '');
-                    window.history.replaceState({}, '', newUrl);
-                }
-
-            } catch (error) {
-                console.error('Handle partner join error:', error);
-                showToast('Katılım başarısız: ' + error.message, 'error');
-            }
-        }
-
-        // ---- Kod Doğrula ----
-        async function verifyCode(code) {
-            if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
-            if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.', 'error'); return; }
-            try {
-                const docRef = doc(db, "trades", currentTradeId);
-                const docSnap = await getDoc(docRef);
-                if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
-                const data = docSnap.data();
-
-                if (data.creatorId === currentUser.uid) {
-                    if (data.creatorCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
-                    await updateDoc(docRef, { creatorConfirmed: true, updatedAt: new Date().toISOString() });
-                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
-                } else if (data.partnerId === currentUser.uid) {
-                    if (data.partnerCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
-                    await updateDoc(docRef, { partnerConfirmed: true, updatedAt: new Date().toISOString() });
-                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
-                } else {
-                    showToast('Bu takasa ait değilsiniz.', 'error');
-                    return;
-                }
-
-                const updated = (await getDoc(docRef)).data();
-                if (updated.creatorConfirmed && updated.partnerConfirmed) {
-                    await updateDoc(docRef, { status: 'completed', updatedAt: new Date().toISOString() });
-                    showToast('🎉 Takas başarıyla tamamlandı!', 'success');
-                    if (updated.creatorId === currentUser.uid) {
-                        showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
-                    } else {
-                        showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
-                    }
-                    resetUI();
-                    await listenForTrade(currentUser.uid);
-                    loadTradeList(currentUser.uid);
-                }
-            } catch (error) {
-                console.error('Verify code error:', error);
-                showToast('Doğrulama hatası: ' + error.message, 'error');
-            }
-        }
-
-        async function verifyPartnerCode(code) {
-            if (!currentTradeId || !currentUser) { showToast('Aktif takas bulunamadı.', 'error'); return; }
-            if (!code || code.length !== 6 || isNaN(code)) { showToast('Lütfen 6 haneli sayısal kodu girin.', 'error'); return; }
-            try {
-                const docRef = doc(db, "trades", currentTradeId);
-                const docSnap = await getDoc(docRef);
-                if (!docSnap.exists()) { showToast('Takas bulunamadı.', 'error'); return; }
-                const data = docSnap.data();
-
-                if (data.creatorId === currentUser.uid) {
-                    if (data.creatorCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
-                    await updateDoc(docRef, { creatorConfirmed: true, updatedAt: new Date().toISOString() });
-                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
-                    if (data.partnerCode) {
-                        partnerPartnerCode.textContent = data.partnerCode;
-                        partnerPartnerCodeBox.style.display = 'block';
-                        partnerCodeStatus.textContent = 'PARTNER KODU GELDİ';
-                        partnerCodeStatus.className = 'status-badge ready';
-                    }
-                } else if (data.partnerId === currentUser.uid) {
-                    if (data.partnerCode !== code) { showToast('❌ Yanlış kod!', 'error'); return; }
-                    await updateDoc(docRef, { partnerConfirmed: true, updatedAt: new Date().toISOString() });
-                    showToast('✅ Kod doğrulandı! Karşı taraf bekleniyor.', 'success');
-                    if (data.creatorCode) {
-                        partnerPartnerCode.textContent = data.creatorCode;
-                        partnerPartnerCodeBox.style.display = 'block';
-                        partnerCodeStatus.textContent = 'KARŞI TARAF KODU GELDİ';
-                        partnerCodeStatus.className = 'status-badge ready';
-                    }
-                }
-
-                const updated = (await getDoc(docRef)).data();
-                if (updated.creatorConfirmed && updated.partnerConfirmed) {
-                    await updateDoc(docRef, { status: 'completed', updatedAt: new Date().toISOString() });
-                    showToast('🎉 Takas başarıyla tamamlandı!', 'success');
-                    if (updated.creatorId === currentUser.uid) {
-                        showToast('Partner kodunuz: ' + updated.partnerCode, 'success');
-                    } else {
-                        showToast('Partner kodunuz: ' + updated.creatorCode, 'success');
-                    }
-                    resetUI();
-                    await listenForTrade(currentUser.uid);
-                    loadTradeList(currentUser.uid);
-                }
-            } catch (error) {
-                console.error('Verify partner code error:', error);
-                showToast('Doğrulama hatası: ' + error.message, 'error');
-            }
-        }
-
-        // ---- Event Listeners ----
-        loginBtn.addEventListener('click', async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                showToast('Hoş geldin, ' + result.user.displayName + '!', 'success');
-            } catch (error) {
-                if (error.code === 'auth/popup-blocked') {
-                    showToast('Popup engellendi! Lütfen popup engelini kaldırın.', 'error');
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    showToast('Alan adı yetkili değil! Firebase konsoluna bu domaini ekleyin.', 'error');
-                } else if (error.code !== 'auth/cancelled-popup-request') {
-                    showToast('Giriş başarısız: ' + error.message, 'error');
-                }
+                currentUser = null;
+                loginSection.style.display = 'block';
+                appSection.classList.remove('active');
             }
         });
 
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).catch((error) => {
-                showToast('Çıkış başarısız: ' + error.message, 'error');
-            });
-        });
+        // Event Listeners
+        loginBtn.addEventListener('click', () => signInWithPopup(auth, provider));
+        logoutBtn.addEventListener('click', () => signOut(auth));
 
         openTradeBtn.addEventListener('click', () => {
-            if (!currentUser) { showToast('Önce giriş yapın!', 'error'); return; }
             tradeForm.classList.toggle('active');
-            if (tradeForm.classList.contains('active')) {
-                tradeUsername.value = '';
-                tradePassword.value = '';
-                tradeUsername.focus();
-            }
-        });
-
-        confirmTradeBtn.addEventListener('click', async () => {
-            const username = tradeUsername.value.trim();
-            const password = tradePassword.value.trim();
-            if (!username || !password) {
-                showToast('Lütfen Valorant kullanıcı adı ve şifrenizi girin.', 'error');
-                return;
-            }
-            await createTrade(username, password);
-            tradeForm.classList.remove('active');
         });
 
         cancelTradeBtn.addEventListener('click', () => {
             tradeForm.classList.remove('active');
         });
 
-        copyLinkBtn.addEventListener('click', async () => {
-            const link = tradeLinkInput.value;
-            if (!link || link === 'Link oluşturuluyor...') {
-                showToast('Önce takas oluşturun!', 'error');
+        confirmTradeBtn.addEventListener('click', async () => {
+            const username = document.getElementById('tradeUsername').value.trim();
+            const password = document.getElementById('tradePassword').value.trim();
+
+            if (!username || !password) {
+                showToast("Lütfen tüm alanları doldurun!", "error");
                 return;
             }
+
             try {
-                await navigator.clipboard.writeText(link);
-                copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı!';
-                copyLinkBtn.classList.add('copied');
-                showToast('✅ Link kopyalandı!', 'success');
-                setTimeout(() => {
-                    copyLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
-                    copyLinkBtn.classList.remove('copied');
-                }, 3000);
-            } catch {
-                tradeLinkInput.select();
-                document.execCommand('copy');
-                showToast('✅ Link kopyalandı!', 'success');
+                const newTradeRef = doc(collection(db, "trades"));
+                const tradeData = {
+                    creatorId: currentUser.uid,
+                    creatorUsername: username,
+                    creatorCode: Math.floor(100000 + Math.random() * 900000).toString(),
+                    status: 'waiting_partner',
+                    createdAt: new Date().toISOString()
+                };
+
+                await setDoc(newTradeRef, tradeData);
+                currentTradeId = newTradeRef.id;
+
+                // Gerçek Çalışan Link Yerleştirme
+                const realLink = generateTradeLink(currentTradeId);
+                tradeLinkInput.value = realLink;
+
+                tradeForm.classList.remove('active');
+                linkBox.classList.add('active');
+                statusBox.classList.add('active');
+                showToast("Takas oluşturuldu! Link kopyalamaya hazır.", "success");
+
+                listenToTrade(currentTradeId);
+
+            } catch (err) {
+                showToast("Takas oluşturulurken hata: " + err.message, "error");
             }
         });
 
-        confirmCodeBtn.addEventListener('click', async () => {
-            const code = codeInput.value.trim();
-            await verifyCode(code);
-            codeInput.value = '';
+        copyLinkBtn.addEventListener('click', () => {
+            tradeLinkInput.select();
+            navigator.clipboard.writeText(tradeLinkInput.value);
+            copyLinkBtn.classList.add('copied');
+            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı';
+            showToast("Bağlantı panoya kopyalandı!", "success");
+            setTimeout(() => {
+                copyLinkBtn.classList.remove('copied');
+                copyLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+            }, 3000);
         });
 
-        codeInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') confirmCodeBtn.click();
-        });
-        codeInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
-        });
-
-        partnerConfirmCodeBtn.addEventListener('click', async () => {
-            const code = partnerCodeInput.value.trim();
-            await verifyPartnerCode(code);
-            partnerCodeInput.value = '';
-        });
-
-        partnerCodeInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') partnerConfirmCodeBtn.click();
-        });
-        partnerCodeInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
-        });
-
-        // ---- Auth ----
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                setUser(user);
-                showApp();
-                await loadTradeList(user.uid);
-                await listenForTrade(user.uid);
-                await handlePartnerJoin();
-            } else {
-                currentUser = null;
-                showLogin();
-                resetUI();
-            }
-        });
-
-        // ---- Init ----
-        window.addEventListener('load', () => {
-            console.log('🚀 ValoTakas v7.0 loaded');
-        });
-
-        console.log('✅ All systems ready.');
+        function listenToTrade(tradeId) {
+            onSnapshot(doc(db, "trades", tradeId), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.status === 'waiting_partner') {
+                        document.getElementById('statusDesc').textContent = "Takas açıldı. Karşı tarafın katılması bekleniyor...";
+                    } else if (data.status === 'active') {
+                        codeSection.classList.add('visible');
+                        document.getElementById('myCodeDisplay').textContent = data.creatorCode;
+                        document.getElementById('statusDesc').textContent = "Karşı taraf takasa katıldı! Kod doğrulaması yapın.";
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
