@@ -20,6 +20,7 @@
 
         :root {
             --valorant-red: #ff4655;
+            --valorant-red-dark: #cc3344;
             --valorant-red-glow: rgba(255, 70, 85, 0.4);
             --valorant-dark: #0f1923;
             --valorant-card: #1a2a3a;
@@ -148,11 +149,6 @@
             }
         }
 
-        .login-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-        }
-
         .login-box .logo-icon {
             font-size: 56px;
             color: var(--valorant-red);
@@ -222,10 +218,6 @@
             border-color: var(--valorant-red);
             transform: scale(1.02);
             box-shadow: 0 4px 24px rgba(255, 70, 85, 0.15);
-        }
-
-        .login-box .google-btn:active {
-            transform: scale(0.97);
         }
 
         .login-box .google-btn i {
@@ -584,75 +576,123 @@
             color: #fff;
         }
 
-        /* ===== LINK BOX ===== */
+        /* ===== LINK BOX - GELİŞTİRİLDİ ===== */
         .link-box {
             display: none;
             background: linear-gradient(135deg, var(--valorant-dark), #141e28);
-            padding: 16px 18px;
+            padding: 18px 20px;
             border-radius: var(--radius-md);
             margin-top: 14px;
             border: 1px solid var(--valorant-border);
-            align-items: center;
+            flex-direction: column;
             gap: 12px;
-            flex-wrap: wrap;
+            animation: fadeSlideIn 0.3s ease;
         }
 
         .link-box.active {
             display: flex;
-            animation: fadeSlideIn 0.3s ease;
+        }
+
+        .link-box .link-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .link-box .link-label {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--valorant-muted);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            width: 100%;
         }
 
-        .link-box input {
-            flex: 1;
-            min-width: 150px;
-            background: var(--valorant-card);
+        .link-box .link-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .link-box .link-actions .btn-icon {
+            background: transparent;
             border: 1px solid var(--valorant-border);
+            color: var(--valorant-muted);
+            padding: 6px 12px;
             border-radius: var(--radius-full);
-            padding: 10px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .link-box .link-actions .btn-icon:hover {
+            background: var(--valorant-border);
+            color: #fff;
+        }
+
+        .link-box .link-actions .btn-icon.copy-btn {
+            border-color: var(--valorant-success);
+            color: var(--valorant-success);
+        }
+
+        .link-box .link-actions .btn-icon.copy-btn:hover {
+            background: var(--valorant-success);
+            color: #fff;
+        }
+
+        .link-box .link-actions .btn-icon.delete-btn {
+            border-color: var(--valorant-red);
+            color: var(--valorant-red);
+        }
+
+        .link-box .link-actions .btn-icon.delete-btn:hover {
+            background: var(--valorant-red);
+            color: #fff;
+        }
+
+        .link-box .link-url {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--valorant-card);
+            border-radius: var(--radius-full);
+            padding: 4px 4px 4px 16px;
+            border: 1px solid var(--valorant-border);
+        }
+
+        .link-box .link-url input {
+            flex: 1;
+            background: transparent;
+            border: none;
             color: #b0c0d0;
             font-size: 13px;
             outline: none;
+            padding: 10px 0;
+            min-width: 0;
             font-weight: 500;
         }
 
-        .link-box input:focus {
-            border-color: var(--valorant-red);
-        }
-
-        .link-box .copy-btn {
-            background: linear-gradient(135deg, var(--valorant-red), var(--valorant-red-dark));
+        .link-box .link-url .copy-btn-small {
+            background: var(--valorant-red);
             border: none;
             color: #fff;
-            padding: 10px 22px;
+            padding: 8px 18px;
             border-radius: var(--radius-full);
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
             white-space: nowrap;
-            box-shadow: 0 2px 16px rgba(255, 70, 85, 0.2);
         }
 
-        .link-box .copy-btn:hover {
+        .link-box .link-url .copy-btn-small:hover {
             transform: scale(1.04);
-            box-shadow: 0 4px 24px rgba(255, 70, 85, 0.35);
+            box-shadow: 0 4px 20px rgba(255, 70, 85, 0.35);
         }
 
-        .link-box .copy-btn.copied {
+        .link-box .link-url .copy-btn-small.copied {
             background: var(--valorant-success);
-            box-shadow: 0 4px 24px rgba(0, 212, 170, 0.35);
         }
 
         /* ===== STATUS ===== */
@@ -1212,6 +1252,17 @@
             .tab-btn {
                 padding: 12px 0;
             }
+            .link-box .link-url {
+                flex-wrap: wrap;
+            }
+            .link-box .link-url input {
+                width: 100%;
+                font-size: 12px;
+            }
+            .link-box .link-url .copy-btn-small {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1233,12 +1284,8 @@
                 margin: 0 auto;
                 width: fit-content;
             }
-            .link-box {
-                flex-direction: column;
-            }
-            .link-box .copy-btn {
-                width: 100%;
-                justify-content: center;
+            .link-box .link-actions {
+                flex-wrap: wrap;
             }
             .code-display {
                 font-size: 20px;
@@ -1287,12 +1334,15 @@
 
             <!-- Tab: Takas -->
             <div id="tab-trade" class="tab-content active">
+
+                <!-- Yeni Takas Aç Butonu -->
                 <button id="openTradeBtn" class="btn-primary">
                     <span class="icon"><i class="fas fa-plus-circle"></i></span>
                     Yeni Takas Aç
                     <span style="font-size:12px; opacity:0.6; font-weight:400;">⚡</span>
                 </button>
 
+                <!-- Trade Form -->
                 <div id="tradeForm" class="trade-form">
                     <label><i class="fas fa-user"></i> Valorant Kullanıcı Adı</label>
                     <input type="text" id="tradeUsername" placeholder="Kullanıcı adınız" autocomplete="off" />
@@ -1304,20 +1354,34 @@
                     <button id="cancelTradeBtn" class="btn-cancel">İptal</button>
                 </div>
 
-                <!-- LINK BOX - DÜZELTİLDİ VE ÇALIŞIR -->
+                <!-- ===== LINK BOX - YENİ TASARIM ===== -->
                 <div id="linkBox" class="link-box">
-                    <span class="link-label"><i class="fas fa-link"></i> Takas Linki</span>
-                    <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
-                    <button id="copyLinkBtn" class="copy-btn">
-                        <i class="fas fa-copy"></i> Kopyala
-                    </button>
+                    <div class="link-header">
+                        <span class="link-label"><i class="fas fa-link"></i> Takas Linkin</span>
+                        <div class="link-actions">
+                            <button class="btn-icon copy-btn" id="copyLinkBtn">
+                                <i class="fas fa-copy"></i> Kopyala
+                            </button>
+                            <button class="btn-icon delete-btn" id="deleteLinkBtn">
+                                <i class="fas fa-trash"></i> İptal Et
+                            </button>
+                        </div>
+                    </div>
+                    <div class="link-url">
+                        <input type="text" id="tradeLinkInput" readonly value="Link oluşturuluyor..." />
+                        <button class="copy-btn-small" id="copyLinkBtnSmall">
+                            <i class="fas fa-copy"></i> Kopyala
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Status Box -->
                 <div id="statusBox" class="status-box">
                     <div class="title"><i class="fas fa-exchange-alt"></i> Aktif Takas</div>
                     <div class="desc" id="statusDesc">Takas linki oluşturuldu. Karşı tarafın katılmasını bekleyin.</div>
                 </div>
 
+                <!-- Code Section -->
                 <div id="codeSection" class="code-section">
                     <div class="code-wrapper">
                         <div class="code-header">
@@ -1490,6 +1554,8 @@
         const linkBox = document.getElementById('linkBox');
         const tradeLinkInput = document.getElementById('tradeLinkInput');
         const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const copyLinkBtnSmall = document.getElementById('copyLinkBtnSmall');
+        const deleteLinkBtn = document.getElementById('deleteLinkBtn');
 
         const statusBox = document.getElementById('statusBox');
         const statusDesc = document.getElementById('statusDesc');
@@ -1587,7 +1653,11 @@
         function getTradeLink(tradeId) {
             const currentUrl = window.location.href;
             const baseUrl = currentUrl.split('?')[0];
-            const link = baseUrl + '?tradeId=' + tradeId;
+            // URL'deki son /'den sonrasını al
+            const parts = baseUrl.split('/');
+            const baseName = parts[parts.length - 1] || 'valotakas';
+            // Benzersiz link oluştur
+            const link = `https://valotakasofficial/takas${tradeId.slice(-6)}.vercel.app/`;
             console.log('🔗 Oluşturulan link:', link);
             return link;
         }
@@ -2118,6 +2188,63 @@
         }
 
         // ================================================================
+        // TAKAS İPTAL (SİL)
+        // ================================================================
+        async function cancelTrade() {
+            if (!currentTradeId || !currentUser) {
+                showToast('Aktif takas bulunamadı.', 'warning');
+                return;
+            }
+            if (!confirm('Bu takası iptal etmek istediğinize emin misiniz?')) return;
+            try {
+                const docRef = doc(db, "trades", currentTradeId);
+                await updateDoc(docRef, {
+                    status: 'cancelled',
+                    updatedAt: new Date().toISOString()
+                });
+                showToast('Takas iptal edildi.', 'warning');
+                resetUI();
+                await listenForTrade(currentUser.uid);
+                loadTradeList(currentUser.uid);
+            } catch (error) {
+                console.error('Cancel trade error:', error);
+                showToast('İptal başarısız: ' + error.message, 'error');
+            }
+        }
+
+        // ================================================================
+        // KOPYALA FONKSİYONU
+        // ================================================================
+        async function copyLink() {
+            const link = tradeLinkInput.value;
+            if (!link || link === 'Link oluşturuluyor...') {
+                showToast('Önce takas oluşturun!', 'error');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(link);
+                // Butonları güncelle
+                const buttons = [copyLinkBtn, copyLinkBtnSmall];
+                buttons.forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı!';
+                    btn.classList.add('copied');
+                });
+                showToast('✅ Link kopyalandı!', 'success');
+                setTimeout(() => {
+                    buttons.forEach(btn => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                        btn.classList.remove('copied');
+                    });
+                }, 3000);
+            } catch (err) {
+                // Fallback
+                tradeLinkInput.select();
+                document.execCommand('copy');
+                showToast('✅ Link kopyalandı!', 'success');
+            }
+        }
+
+        // ================================================================
         // EVENT LISTENERS
         // ================================================================
         loginBtn.addEventListener('click', async () => {
@@ -2166,27 +2293,12 @@
             tradeForm.classList.remove('active');
         });
 
-        copyLinkBtn.addEventListener('click', async () => {
-            const link = tradeLinkInput.value;
-            if (!link || link === 'Link oluşturuluyor...') {
-                showToast('Önce takas oluşturun!', 'error');
-                return;
-            }
-            try {
-                await navigator.clipboard.writeText(link);
-                copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı!';
-                copyLinkBtn.classList.add('copied');
-                showToast('✅ Link kopyalandı!', 'success');
-                setTimeout(() => {
-                    copyLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
-                    copyLinkBtn.classList.remove('copied');
-                }, 3000);
-            } catch {
-                tradeLinkInput.select();
-                document.execCommand('copy');
-                showToast('✅ Link kopyalandı!', 'success');
-            }
-        });
+        // Kopyala butonları
+        copyLinkBtn.addEventListener('click', copyLink);
+        copyLinkBtnSmall.addEventListener('click', copyLink);
+
+        // İptal butonu
+        deleteLinkBtn.addEventListener('click', cancelTrade);
 
         confirmCodeBtn.addEventListener('click', async () => {
             const code = codeInput.value.trim();
@@ -2236,8 +2348,7 @@
         // INIT
         // ================================================================
         window.addEventListener('load', () => {
-            console.log('🚀 ValoTakas v9.0 loaded');
-            // URL'de tradeId varsa logla
+            console.log('🚀 ValoTakas v10.0 loaded');
             const params = new URLSearchParams(window.location.search);
             if (params.get('tradeId')) {
                 console.log('🔗 Trade ID from URL:', params.get('tradeId'));
